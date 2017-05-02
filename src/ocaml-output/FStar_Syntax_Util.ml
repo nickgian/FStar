@@ -2151,3 +2151,19 @@ let rec bottom_fold:
            FStar_Syntax_Syntax.vars =
              (uu___183_5815.FStar_Syntax_Syntax.vars)
          })
+let rec apply_last f l =
+  match l with
+  | [] -> failwith "apply_last: got empty list"
+  | a::[] -> let uu____5842 = f a in [uu____5842]
+  | x::xs -> let uu____5846 = apply_last f xs in x :: uu____5846
+let dm4f_lid:
+  FStar_Syntax_Syntax.eff_decl -> Prims.string -> FStar_Ident.lident =
+  fun ed  ->
+    fun name  ->
+      let p = FStar_Ident.path_of_lid ed.FStar_Syntax_Syntax.mname in
+      let p' =
+        apply_last
+          (fun s  ->
+             Prims.strcat "_dm4f_" (Prims.strcat s (Prims.strcat "_" name)))
+          p in
+      FStar_Ident.lid_of_path p' FStar_Range.dummyRange
