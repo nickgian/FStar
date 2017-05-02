@@ -121,11 +121,13 @@ let effect_as_etag =
             // Reifiable effects should be pure. Added guard because some effect declarations
             // don't seem to be in the environment at this point, in particular FStar.All.ML
             // (maybe because it's primitive?)
+            match TypeChecker.Env.effect_decl_opt g.tcenv l with
+            | Some (ed, qualifiers) ->
+                if qualifiers |> List.contains Reifiable
+                    then E_PURE
+                    else E_IMPURE
+            | None -> E_IMPURE
 
-            let ed, qualifiers = must (TypeChecker.Env.effect_decl_opt g.tcenv l) in
-            if qualifiers |> List.contains Reifiable
-                then E_PURE
-                else E_IMPURE
 
 (********************************************************************************************)
 (* Basic syntactic operations on a term                                                     *)
