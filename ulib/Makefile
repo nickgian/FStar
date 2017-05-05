@@ -88,8 +88,6 @@ mgen:
 	$(FSTAR) --lax --codegen OCaml --odir ml/extracted --no_extract FStar.List.Tot --no_extract FStar.List.Tot.Base --no_extract FStar.Heap --no_extract FStar.List.Tot.Properties --no_extract FStar.Set FStar.TSet.fst FStar.Map.fst FStar.HyperHeap.fst FStar.HyperStack.fst
 
 
-CFSTAR=$(subst CURRENT_DIR,ulib,$(CVERFSTAR))
-
 %-cver: % CVERCONFIG
 	$(CFSTAR) $*
 
