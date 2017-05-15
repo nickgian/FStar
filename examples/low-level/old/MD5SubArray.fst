@@ -30,7 +30,7 @@ assume val memFlattenIndex :
   Lemma
     (requires True)
     (ensures (mem (Ref (atIndex v ind)) (flattenRefs v)))
-      [SMTPat (ind < n)]
+      [smt_pat (ind < n)]
 
 (*define this using flatten refs?*)
 type arrayExixtsInMem (#a:Type) (#n:nat) (v: vector (lref  a) n) (m:smem) =
@@ -139,12 +139,12 @@ val subArrayExists :
 -> Lemma
     (requires (arrayExixtsInMem ch m))
     (ensures (arrayExixtsInMem (subVector offset len ch) m))
-    [SMTPat (subVector #(lref a) #n offset len ch); SMTPatT (arrayExixtsInMem #a #n ch m)]
+    [smt_pat (subVector #(lref a) #n offset len ch); smt_pat (arrayExixtsInMem #a #n ch m)]
 
 let subArrayExists 'a #n ch offset len m = (admit ())
 (*Note that subVector is opaque and Fstar doesnot know anything about it*)
 
-(*because SMTPat does not work above, this is a nop to get the logic right*)
+(*because smt_pat does not work above, this is a nop to get the logic right*)
 val subArrayExists2 :
 #a:Type
 -> #n:nat
@@ -208,7 +208,7 @@ val arrayExistsInMemTailSids : #a:Type -> #n:nat -> r:(vector (lref a) n)
   -> m0:smem -> m1:smem -> Lemma
   (requires (sids m0 = sids m1 /\ arrayExixtsInMem r (mtail m0) /\ arrayExixtsInMem r m1))
   (ensures arrayExixtsInMem r (mtail m1))
-  [SMTPat (sids m0 = sids m1)]
+  [smt_pat (sids m0 = sids m1)]
 let arrayExistsInMemTailSids 'a #n r m0 m1 = (admit ())
 
 

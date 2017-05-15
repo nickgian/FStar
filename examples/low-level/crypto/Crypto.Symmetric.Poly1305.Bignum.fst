@@ -477,7 +477,7 @@ let gte_mask (a:U64.t) (b:U64.t) : Pure U64.t
 let lemma_pow2_26 (x:nat) 
   : Lemma (requires (x == 26))
 	  (ensures (pow2 x = 67108864))
-	  [SMTPat (pow2 x)]
+	  [smt_pat (pow2 x)]
   = assert_norm (pow2 26 = 67108864)
 
 val lemma_finalize':

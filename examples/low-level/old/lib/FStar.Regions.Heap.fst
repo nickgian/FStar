@@ -73,5 +73,5 @@ let eunion s1 s2 = (elift2 union) s1 s2
 
 val eunionUnion : #a:Type  -> #b:Type  -> r1:lref a -> r2:lref b ->
   Lemma (requires True) (ensures ((eunion (only r1) (only r2)) = hide (union (singleton (Ref r1)) (singleton (Ref r2)))))
-  (* [SMTPat (eunion (only r1) (only r2))] *)
+  (* [smt_pat (eunion (only r1) (only r2))] *)
 let eunionUnion r1 r2 = ()

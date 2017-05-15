@@ -11,31 +11,31 @@ assume val substringT: s:string -> start:nat -> len:nat{let l = String.length s 
 assume val string_length_append: a:string -> b:string -> Lemma 
   (requires True)
   (ensures String.length (a ^ b) = String.length a + String.length b)
-  [SMTPat (String.length (a ^ b))]
+  [smt_pat (String.length (a ^ b))]
 assume val string_length_empty: unit -> Lemma 
   (requires True)
   (ensures String.length "" = 0)
-  [SMTPat (String.length "")]
+  [smt_pat (String.length "")]
 assume val append_empty : s:string -> Lemma 
   (requires True)
   (ensures s ^ "" = s)
-  [SMTPat (s ^ "")]
+  [smt_pat (s ^ "")]
 assume val empty_append : s:string -> Lemma 
   (requires True)
   (ensures "" ^ s = s)
-  [SMTPat ("" ^ s)]
+  [smt_pat ("" ^ s)]
 assume val append_assoc : a:string -> b:string -> c:string -> Lemma 
   (requires True)
   (ensures (a ^ (b ^ c)) = ((a ^ b) ^ c))
-  [SMTPat (a ^ (b ^ c))]
+  [smt_pat (a ^ (b ^ c))]
 assume val length_0_empty : s:string -> Lemma 
   (requires String.length s = 0)
   (ensures s = "")
-  [SMTPat (String.length s = 0)]
+  [smt_pat (String.length s = 0)]
 assume val substring_full : s:string -> Lemma
   (requires True)
   (ensures substringT s 0 (String.length s) = s)
-  [SMTPat (substringT s 0 (String.length s))]
+  [smt_pat (substringT s 0 (String.length s))]
 val splitTwo : s : string -> i:nat{i <= String.length s} -> Tot ((a:string{String.length a = i}) * (b:string{String.length b = String.length s - i}))
 let splitTwo s i = (substringT s 0 i, substringT s i (String.length s - i))
 assume val split_append : s:string -> i:nat{i <= String.length s} -> Lemma
@@ -55,13 +55,13 @@ assume val substring_append: s1:string -> i1:nat{i1 <= String.length s1} -> s2:s
 assume val make_length : n:nat -> c:Char.char -> Lemma
   (requires True)
   (ensures String.length (String.make n c) = n)
-  [SMTPat (String.length (String.make n c))]
+  [smt_pat (String.length (String.make n c))]
 assume val getT : s:string -> i:nat{i < String.length s} -> Tot Char.char
 assume val compare_eq : a:string -> b:string -> Lemma
  (requires True)
  (ensures String.compare a b = 0 <==> a = b)
  (* (ensures (String.compare a b = 0 ==> a = b) /\ (String.compare a b <> 0 ==> a <> b)) *)
- (* [SMTPat (String.compare a b = 0)] *)
+ (* [smt_pat (String.compare a b = 0)] *)
 val concatT : sep:string -> ls:list string -> Tot string
 let rec concatT sep ls =
   match ls with
@@ -114,7 +114,7 @@ assume val int_of_string : s:string ->
 assume val int_of_string_of_int : l:nat -> n:nat{repr_bytes n <= l} -> Lemma 
   (requires True)
   (ensures n = int_of_string (string_of_int l n))
-  [SMTPat (int_of_string (string_of_int l n))]
+  [smt_pat (int_of_string (string_of_int l n))]
 assume val string_of_hex: string -> Tot string
 assume val hex_of_string: string -> Tot string
 
@@ -154,7 +154,7 @@ let rec exfalso #a _ = exfalso ()
 val sum_length_append : a:list string -> b:list string -> Lemma 
   (requires True)
   (ensures (sum_length (a @ b) = sum_length a + sum_length b))
-  [SMTPat (sum_length (a @ b))]
+  [smt_pat (sum_length (a @ b))]
 let rec sum_length_append a b =
   match a with
     | [] -> ()
@@ -183,7 +183,7 @@ let rec getBytes (bl: list cbytes) i n  =
 val lemma_getBytes: ls1:list cbytes -> ls2:list cbytes -> i:nat{i <= sum_length ls1} -> n:nat{sum_length ls1 <= i + n /\ i + n <= sum_length ls1 + sum_length ls2} -> Lemma
   (requires True)
   (ensures getBytes (ls1 @ ls2) i n = (getBytes ls1 i (sum_length ls1 - i) ^ getBytes ls2 0 (i + n - sum_length ls1)))
-  [SMTPat (getBytes (ls1 @ ls2) i n)]
+  [smt_pat (getBytes (ls1 @ ls2) i n)]
 let rec lemma_getBytes ls1 ls2 i n =
   match ls1 with
   | [] ->
@@ -213,7 +213,7 @@ let rec concatT_empty ls =
 val concat_append : a:list string -> b:list string -> Lemma 
   (requires True)
   (ensures (concatT_empty (a @ b) = (concatT_empty a ^ concatT_empty b)))
-  [SMTPat (concatT_empty (a @ b))]
+  [smt_pat (concatT_empty (a @ b))]
 let rec concat_append a b =
   match a with
     | [] -> ()
@@ -222,7 +222,7 @@ let rec concat_append a b =
 val sum_length_0_concat_empty : ls:list string -> Lemma 
   (requires sum_length ls = 0)
   (ensures concatT_empty ls = "")
-  [SMTPat (sum_length ls = 0)]
+  [smt_pat (sum_length ls = 0)]
 let rec sum_length_0_concat_empty ls =
   match ls with
   | [] -> ()
@@ -234,7 +234,7 @@ let rec sum_length_0_concat_empty ls =
 val lemma_getBytes_2 : ls:list cbytes -> Lemma
   (requires True)
   (ensures getBytes ls 0 (sum_length ls) = concatT_empty ls)
-  [SMTPat (getBytes ls 0 (sum_length ls))]
+  [smt_pat (getBytes ls 0 (sum_length ls))]
 let rec lemma_getBytes_2 ls = 
   match ls with
   | [] ->
@@ -257,7 +257,7 @@ let rec lemma_getBytes_2 ls =
 val lemma_getBytes_3: ls:list cbytes -> i:nat{i <= sum_length ls} -> n:nat{i + n <= sum_length ls} -> i2:nat{i <= i2 /\ i2 <= i+n} -> n2:nat{i2+n2<=i+n} -> Lemma
   (requires True)
   (ensures getBytes ls i2 n2 = substringT (getBytes ls i n) (i2 - i) n2)
-  [SMTPat (getBytes ls i2 n2)]
+  [smt_pat (getBytes ls i2 n2)]
 let rec lemma_getBytes_3 ls i n i2 n2 = 
   match ls with
   | [] ->
@@ -310,7 +310,7 @@ let get_cbytes' (b:bytes) =
 val concatT_empty_concatT : ls:list string -> Lemma
   (requires True)
   (ensures concatT "" ls = concatT_empty ls)
-  [SMTPat (concatT "" ls)]
+  [smt_pat (concatT "" ls)]
 let rec concatT_empty_concatT ls =
   match ls with
   | [] -> ()
@@ -323,7 +323,7 @@ let rec concatT_empty_concatT ls =
 val get_cbytes'_ok : b : bytes -> Lemma
   (requires True)
   (ensures get_cbytes b = get_cbytes' b)
-  [SMTPat (get_cbytes b)]
+  [smt_pat (get_cbytes b)]
 let get_cbytes'_ok b =
   let _ = concat_concatT "" b.bl in
   ()
@@ -333,7 +333,7 @@ type bytes_eq (a:bytes) (b:bytes) = (get_cbytes a = get_cbytes b)
 assume val bytes_extensionality: a:bytes -> b:bytes -> Lemma
   (requires True)
   (ensures bytes_eq a b <==> a = b)
-  (* [SMTPat (bytes_eq a b)] *)
+  (* [smt_pat (bytes_eq a b)] *)
 
 
 val op_At_Bar: bytes -> bytes -> Tot bytes
@@ -452,7 +452,7 @@ let split b i =
 val lemma_op_At_Bar : a:bytes -> b:bytes -> Lemma 
   (requires True)
   (ensures get_cbytes (a @| b) = (get_cbytes a ^ get_cbytes b))
-  [SMTPat (get_cbytes (a @| b))]
+  [smt_pat (get_cbytes (a @| b))]
 let lemma_op_At_Bar a b = ()
 
 
@@ -540,7 +540,7 @@ let int_of_bytes (b:bytes) =
 val abytes_get_cbytes : s:string -> Lemma
   (requires True)
   (ensures get_cbytes (abytes s) = s)
-  [SMTPat (get_cbytes (abytes s))]
+  [smt_pat (get_cbytes (abytes s))]
 let abytes_get_cbytes s =
   ()
 
@@ -568,7 +568,7 @@ let iutf8_opt (x:bytes) : option string = Some (get_cbytes x)
 val get_cbytes_abytes : b:bytes -> Lemma
   (requires True)
   (ensures abytes (get_cbytes b) = b)
-  [SMTPat (abytes (get_cbytes b))]
+  [smt_pat (abytes (get_cbytes b))]
 let get_cbytes_abytes b =
   let _ = bytes_extensionality (abytes (get_cbytes b)) b in
   ()

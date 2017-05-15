@@ -52,7 +52,7 @@ private let rec path_sel_upd_same
 : Lemma
   (requires True)
   (ensures (path_sel (path_upd m p v) p == v))
-  [SMTPat (path_sel (path_upd m p v) p)]
+  [smt_pat (path_sel (path_upd m p v) p)]
 = match p with
   | PathBase -> ()
   | PathField p' fd ->
@@ -90,7 +90,7 @@ private let rec path_concat_base_l
 : Lemma
   (requires True)
   (ensures (path_concat PathBase p == p))
-  [SMTPat (path_concat PathBase p)]
+  [smt_pat (path_concat PathBase p)]
 = match p with
   | PathBase -> ()
   | PathField p' fd -> path_concat_base_l p'
@@ -119,7 +119,7 @@ private let rec path_sel_concat
   (requires True)
   (ensures (path_sel m (path_concat p q) == path_sel (path_sel m p) q))
   (decreases q)
-  [SMTPat (path_sel m (path_concat p q))]
+  [smt_pat (path_sel m (path_concat p q))]
 = match q with
   | PathBase -> ()
   | PathField q' fd -> path_sel_concat m p q'
@@ -136,7 +136,7 @@ private let rec path_upd_concat
   (requires True)
   (ensures (path_upd m (path_concat p q) v == path_upd m p (path_upd (path_sel m p) q v)))
   (decreases q)
-  [SMTPat (path_upd m (path_concat p q) v)]
+  [smt_pat (path_upd m (path_concat p q) v)]
 = match q with
   | PathBase -> ()
   | PathField q' fd ->
@@ -167,7 +167,7 @@ private let rec path_includes_base
 : Lemma
   (requires True)
   (ensures (path_includes (PathBase #from) p))
-  [SMTPat (path_includes PathBase p)]
+  [smt_pat (path_includes PathBase p)]
 = match p with
   | PathBase -> ()
   | PathField p2' _ -> path_includes_base p2'
@@ -178,7 +178,7 @@ private let path_includes_refl
 : Lemma
   (requires True)
   (ensures (path_includes p p))
-  [SMTPat (path_includes p p)]
+  [smt_pat (path_includes p p)]
 = ()
 
 private let path_includes_field_r
@@ -190,7 +190,7 @@ private let path_includes_field_r
 : Lemma
   (requires True)
   (ensures (path_includes p (PathField p fd)))
-  [SMTPat (path_includes p (PathField p fd))]
+  [smt_pat (path_includes p (PathField p fd))]
 = ()
 
 private let rec path_includes_trans
@@ -296,7 +296,7 @@ private let path_includes_field_l
 : Lemma
   (requires True)
   (ensures (~ (path_includes (PathField p fd) p)))
-  [SMTPat (path_includes (PathField p fd) p)]
+  [smt_pat (path_includes (PathField p fd) p)]
 = assert (path_length (PathField p fd) > path_length p);
   FStar.Classical.forall_intro (path_includes_length #from #(value fd) #(DM.t key value) (PathField p fd))
 
@@ -310,7 +310,7 @@ private let rec path_includes_concat
   (requires True)
   (ensures (path_includes p (path_concat p q)))
   (decreases q)
-  [SMTPat (path_includes p (path_concat p q))]
+  [smt_pat (path_includes p (path_concat p q))]
 = match q with
   | PathBase -> ()
   | PathField q' fd -> path_includes_concat p q'
@@ -465,7 +465,7 @@ private let path_disjoint_field
 : Lemma
   (requires True)
   (ensures (path_disjoint (PathField p fd1) (PathField p fd2)))
-  [SMTPat (path_disjoint (PathField p fd1) (PathField p fd2))]
+  [smt_pat (path_disjoint (PathField p fd1) (PathField p fd2))]
 = FStar.Squash.return_squash (PathDisjointField p fd1 fd2)
 
 private let path_disjoint_includes
@@ -535,7 +535,7 @@ private let path_sel_upd_other'
 : Lemma
   (requires True)
   (ensures (path_sel (path_upd m p1 v) p2 == path_sel m p2))
-  [SMTPat (path_sel (path_upd m p1 v) p2)]
+  [smt_pat (path_sel (path_upd m p1 v) p2)]
 = path_sel_upd_other p1 p2
 
 (** Pointers into nested structures *)
@@ -611,7 +611,7 @@ abstract let live_contains
 : Lemma
   (requires (live h p))
   (ensures (contains h p))
-  [SMTPatT (live h p)]
+  [smt_pat (live h p)]
 = () 
 
 abstract let as_value
@@ -696,7 +696,7 @@ abstract let live_gfrom_buffer_index
 : Lemma
   (requires (Buffer.live h p))
   (ensures (live h (gfrom_buffer_index p i)))
-  [SMTPat (live h (gfrom_buffer_index p i))]
+  [smt_pat (live h (gfrom_buffer_index p i))]
 = ()
 
 abstract let contains_gfrom_buffer_index
@@ -707,7 +707,7 @@ abstract let contains_gfrom_buffer_index
 : Lemma
   (requires (Buffer.contains h p))
   (ensures (contains h (gfrom_buffer_index p i)))
-  [SMTPat (contains h (gfrom_buffer_index p i))]
+  [smt_pat (contains h (gfrom_buffer_index p i))]
 = ()
 
 abstract let as_buffer_gfrom_buffer_index
@@ -728,7 +728,7 @@ abstract let as_value_gfrom_buffer_index
 : Lemma
   (requires (Buffer.contains h p))
   (ensures (contains h (gfrom_buffer_index p i) /\ as_value h (gfrom_buffer_index p i) == Seq.index (Buffer.as_seq h p) i))
-  [SMTPat (as_value h (gfrom_buffer_index p i)); SMTPatT (Buffer.contains h p)]
+  [smt_pat (as_value h (gfrom_buffer_index p i)); smt_pat (Buffer.contains h p)]
 = ()
 
 abstract let gfield
@@ -758,7 +758,7 @@ abstract let contains_gfield
 : Lemma
   (requires True)
   (ensures (contains h (gfield p fd) <==> contains h p))
-  [SMTPat (contains h (gfield p fd))]
+  [smt_pat (contains h (gfield p fd))]
 = ()
 
 abstract let live_gfield
@@ -770,7 +770,7 @@ abstract let live_gfield
 : Lemma
   (requires True)
   (ensures (live h (gfield p fd) <==> live h p))
-  [SMTPat (live h (gfield p fd))]
+  [smt_pat (live h (gfield p fd))]
 = ()
 
 abstract let as_value_gfield
@@ -782,7 +782,7 @@ abstract let as_value_gfield
 : Lemma
   (requires (contains h p))
   (ensures (contains h p /\ as_value h (gfield p fd) == DM.sel (as_value h p) fd))
-  [SMTPat (as_value h (gfield p fd)); SMTPatT (contains h p)]
+  [smt_pat (as_value h (gfield p fd)); smt_pat (contains h p)]
 = ()
 
 abstract let as_value_gfield_live
@@ -794,7 +794,7 @@ abstract let as_value_gfield_live
 : Lemma
   (requires (live h p))
   (ensures (live h p /\ as_value h (gfield p fd) == DM.sel (as_value h p) fd))
-  [SMTPat (as_value h (gfield p fd)); SMTPatT (live h p)]
+  [smt_pat (as_value h (gfield p fd)); smt_pat (live h p)]
 = ()
 
 abstract let frameOf_gfield
@@ -805,7 +805,7 @@ abstract let frameOf_gfield
 : Lemma
   (requires True)
   (ensures (frameOf (gfield p fd) == frameOf p))
-  [SMTPat (frameOf (gfield p fd))]
+  [smt_pat (frameOf (gfield p fd))]
 = ()
 
 (*
@@ -823,7 +823,7 @@ abstract let memory_managed_gfield
 : Lemma
   (requires True)
   (ensures (memory_managed (gfield p fd) <==> memory_managed p))
-  [SMTPat (memory_managed (gfield p fd))]
+  [smt_pat (memory_managed (gfield p fd))]
 = let p' = gfield p fd in
   memory_managed_redundant_lemma p;
   memory_managed_redundant_lemma p';
@@ -838,7 +838,7 @@ abstract let includes_gfield
 : Lemma
   (requires True)
   (ensures (includes p (gfield p fd)))
-  [SMTPat (includes p (gfield p fd))]
+  [smt_pat (includes p (gfield p fd))]
 = ()
 
 abstract let includes_refl
@@ -847,7 +847,7 @@ abstract let includes_refl
 : Lemma
   (requires True)
   (ensures (includes p p))
-  [SMTPat (includes p p)]
+  [smt_pat (includes p p)]
 = ()
 
 abstract let includes_trans
@@ -858,7 +858,7 @@ abstract let includes_trans
 : Lemma
   (requires (includes p1 p2 /\ includes p2 p3))
   (ensures (includes p1 p3))
-  [SMTPatT (includes p1 p2); SMTPatT (includes p2 p3)]
+  [smt_pat (includes p1 p2); smt_pat (includes p2 p3)]
 = path_includes_trans (StructPtr?.p p1) (StructPtr?.p p2) (StructPtr?.p p3)
 
 abstract let includes_ind
@@ -909,7 +909,7 @@ let contains_includes
 : Lemma
   (requires (includes p1 p2))
   (contains h p1 <==> contains h p2)
-  [SMTPatT (contains h p2); SMTPatT (includes p1 p2)]
+  [smt_pat (contains h p2); smt_pat (includes p1 p2)]
 = includes_ind
   (fun #v1 #v2 p1 p2 -> contains h p1 <==> contains h p2)
   (fun #k #v p fd -> contains_gfield h p fd)
@@ -926,7 +926,7 @@ let live_includes
 : Lemma
   (requires (includes p1 p2))
   (ensures (live h p1 <==> live h p2))
-  [SMTPatT (live h p2); SMTPatT (includes p1 p2)]
+  [smt_pat (live h p2); smt_pat (includes p1 p2)]
 = includes_ind
   (fun #v1 #v2 p1 p2 -> live h p1 <==> live h p2)
   (fun #k #v p fd -> live_gfield h p fd)
@@ -963,7 +963,7 @@ abstract let disjoint_gfrom_buffer_index_other
 : Lemma
   (requires (Buffer.disjoint p1 p2))
   (ensures (disjoint (gfrom_buffer_index p1 i1) (gfrom_buffer_index p2 i2)))
-  [SMTPat (disjoint (gfrom_buffer_index p1 i1) (gfrom_buffer_index p2 i2))]
+  [smt_pat (disjoint (gfrom_buffer_index p1 i1) (gfrom_buffer_index p2 i2))]
 = ()
 
 abstract let disjoint_gfrom_buffer_index_same
@@ -974,7 +974,7 @@ abstract let disjoint_gfrom_buffer_index_same
 : Lemma
   (requires (i1 <> i2))
   (ensures (disjoint (gfrom_buffer_index p i1) (gfrom_buffer_index p i2)))
-  [SMTPat (disjoint (gfrom_buffer_index p i1) (gfrom_buffer_index p i2))]
+  [smt_pat (disjoint (gfrom_buffer_index p i1) (gfrom_buffer_index p i2))]
 = ()
 
 abstract let disjoint_gfield
@@ -986,7 +986,7 @@ abstract let disjoint_gfield
 : Lemma
   (requires (fd1 <> fd2))
   (ensures (disjoint (gfield p fd1) (gfield p fd2)))
-  [SMTPat (disjoint (gfield p fd1) (gfield p fd2))]
+  [smt_pat (disjoint (gfield p fd1) (gfield p fd2))]
 = ()
 
 abstract let disjoint_includes
@@ -1088,20 +1088,20 @@ let disjoint_sym'
 : Lemma
   (requires True)
   (ensures (disjoint p1 p2 <==> disjoint p2 p1))
-  [SMTPat (disjoint p1 p2)]
+  [smt_pat (disjoint p1 p2)]
 = FStar.Classical.move_requires (disjoint_sym #value1 #value2 p1) p2;
   FStar.Classical.move_requires (disjoint_sym #value2 #value1 p2) p1
 
 let disjoint_includes_l #a #as #a' (x: struct_ptr a) (subx:struct_ptr as) (y:struct_ptr a') : Lemma
   (requires (includes x subx /\ disjoint x y))
   (ensures  (disjoint subx y))
-  [SMTPatT (disjoint subx y); SMTPatT (includes x subx)]
+  [smt_pat (disjoint subx y); smt_pat (includes x subx)]
   = disjoint_includes x y subx y
 
 let disjoint_includes_l_swap #a #as #a' (x:struct_ptr a) (subx:struct_ptr as) (y:struct_ptr a') : Lemma
   (requires (includes x subx /\ disjoint x y))
   (ensures  (disjoint y subx))
-  [SMTPatT (disjoint y subx); SMTPatT (includes x subx)]
+  [smt_pat (disjoint y subx); smt_pat (includes x subx)]
   = ()
 
 let live_disjoint
@@ -1113,7 +1113,7 @@ let live_disjoint
 : Lemma
   (requires (live h p1 /\ p2 `unused_in` h))
   (ensures (disjoint p1 p2))
-  [SMTPatT (disjoint p1 p2); SMTPatT (live h p1)]
+  [smt_pat (disjoint p1 p2); smt_pat (live h p1)]
 = live_contains h p1;
   disjoint_root p1 p2
 
@@ -1131,7 +1131,7 @@ let modifies_ptr_1 (#t:Type) rid (b:struct_ptr t) h h' = //would be good to drop
 let modifies_ptr_0_0 rid h0 h1 h2 :
   Lemma (requires (modifies_ptr_0 rid h0 h1 /\ modifies_ptr_0 rid h1 h2))
 	(ensures (modifies_ptr_0 rid h0 h2))
-	[SMTPatT (modifies_ptr_0 rid h0 h1); SMTPatT (modifies_ptr_0 rid h1 h2)]
+	[smt_pat (modifies_ptr_0 rid h0 h1); smt_pat (modifies_ptr_0 rid h1 h2)]
  = ()
 
 
@@ -1180,7 +1180,7 @@ let modifies_1_reveal (#a:Type) (b:struct_ptr a) h0 h1 : Lemma
 let lemma_ststack_1 (#a:Type) (b:struct_ptr a) h0 h1 h2 h3 : Lemma
   (requires (live h0 b /\ HS.fresh_frame h0 h1 /\ modifies_1 b h1 h2 /\ HS.popped h2 h3))
   (ensures  (modifies_1 b h0 h3))
-  [SMTPatT (modifies_1 b h1 h2); SMTPatT (HS.fresh_frame h0 h1); SMTPatT (HS.popped h2 h3)]
+  [smt_pat (modifies_1 b h1 h2); smt_pat (HS.fresh_frame h0 h1); smt_pat (HS.popped h2 h3)]
   = Buffer.lemma_reveal_modifies_1 (as_buffer b) h1 h2;
     Buffer.lemma_intro_modifies_1 (as_buffer b) h0 h3
 
@@ -1188,20 +1188,20 @@ let lemma_ststack_1 (#a:Type) (b:struct_ptr a) h0 h1 h2 h3 : Lemma
 let modifies_0_trans h0 h1 h2 : Lemma
   (requires (modifies_0 h0 h1 /\ modifies_0 h1 h2))
   (ensures  (modifies_0 h0 h2))
-  [SMTPatT (modifies_0 h0 h1); SMTPatT (modifies_0 h1 h2)]
+  [smt_pat (modifies_0 h0 h1); smt_pat (modifies_0 h1 h2)]
   = ()
 
 let modifies_1_trans (#a:Type) (b:struct_ptr a) h0 h1 h2 : Lemma
   (requires (modifies_1 b h0 h1 /\ modifies_1 b h1 h2))
   (ensures (modifies_1 b h0 h2))
-  [SMTPatT (modifies_1 b h0 h1); SMTPatT (modifies_1 b h1 h2)]
+  [smt_pat (modifies_1 b h0 h1); smt_pat (modifies_1 b h1 h2)]
   = ()
 
 (* Specific modifies clause lemmas *)
 val modifies_0_0: h0:HS.mem -> h1:HS.mem -> h2:HS.mem -> Lemma
   (requires (modifies_0 h0 h1 /\ modifies_0 h1 h2))
   (ensures  (modifies_0 h0 h2))
-  [SMTPatT (modifies_0 h0 h1); SMTPatT (modifies_0 h1 h2)]
+  [smt_pat (modifies_0 h0 h1); smt_pat (modifies_0 h1 h2)]
 let modifies_0_0 h0 h1 h2 = ()
 
 #reset-options "--z3rlimit 16"
@@ -1209,7 +1209,7 @@ let modifies_0_0 h0 h1 h2 = ()
 let modifies_0_1 (#a:Type) (b:struct_ptr a) h0 h1 h2 : Lemma
   (requires (b `unused_in` h0 /\ modifies_0 h0 h1 /\ live h1 b /\ modifies_1 b h1 h2))
   (ensures  (modifies_0 h0 h2))
-  [SMTPatT (modifies_0 h0 h1); SMTPatT (modifies_1 b h1 h2)]
+  [smt_pat (modifies_0 h0 h1); smt_pat (modifies_1 b h1 h2)]
   = Buffer.lemma_reveal_modifies_0 h0 h1;
     Buffer.lemma_reveal_modifies_1 (as_buffer b) h1 h2;
     Buffer.lemma_intro_modifies_0 h0 h2
@@ -1308,61 +1308,61 @@ let write #a b z =
 val no_upd_lemma_0: #t:Type -> h0:HS.mem -> h1:HS.mem -> b:struct_ptr t -> Lemma
   (requires (live h0 b /\ modifies_0 h0 h1))
   (ensures  (live h0 b /\ live h1 b /\ equal_values h0 b h1 b))
-  [SMTPatT (modifies_0 h0 h1); SMTPatT (live h0 b)]
+  [smt_pat (modifies_0 h0 h1); smt_pat (live h0 b)]
 let no_upd_lemma_0 #t h0 h1 b = ()
 
 val no_upd_lemma_1: #t:Type -> #t':Type -> h0:HS.mem -> h1:HS.mem -> a:struct_ptr t -> b:struct_ptr t' -> Lemma
   (requires (live h0 b /\ disjoint a b /\ modifies_1 a h0 h1))
   (ensures  (live h0 b /\ live h1 b /\ equal_values h0 b h1 b))
-  [SMTPatOr [ [ SMTPatT (modifies_1 a h0 h1); SMTPatT (as_value h1 b) ] ; [ SMTPatT (modifies_1 a h0 h1); SMTPatT (live h0 b) ] ] ]
+  [smt_pat_or [ [ smt_pat (modifies_1 a h0 h1); smt_pat (as_value h1 b) ] ; [ smt_pat (modifies_1 a h0 h1); smt_pat (live h0 b) ] ] ]
 let no_upd_lemma_1 #t #t' h0 h1 a b = ()
 
 val no_upd_fresh: #t:Type -> h0:HS.mem -> h1:HS.mem -> a:struct_ptr t -> Lemma
   (requires (live h0 a /\ HS.fresh_frame h0 h1))
   (ensures  (live h0 a /\ live h1 a /\ equal_values h0 a h1 a))
-  [SMTPatT (live h0 a); SMTPatT (HS.fresh_frame h0 h1)]
+  [smt_pat (live h0 a); smt_pat (HS.fresh_frame h0 h1)]
 let no_upd_fresh #t h0 h1 a = ()
 
 val no_upd_popped: #t:Type -> h0:HS.mem -> h1:HS.mem -> b:struct_ptr t -> Lemma
   (requires (live h0 b /\ frameOf b <> h0.HS.tip /\ HS.popped h0 h1))
   (ensures  (live h0 b /\ live h1 b /\ equal_values h0 b h1 b))
-  [SMTPatT (live h0 b); SMTPatT (HS.popped h0 h1)]
+  [smt_pat (live h0 b); smt_pat (HS.popped h0 h1)]
 let no_upd_popped #t h0 h1 b = ()
 
 let lemma_modifies_sub_1 #t h0 h1 (b:struct_ptr t) : Lemma
   (requires (h1 == h0))
   (ensures  (modifies_1 b h0 h1))
-  [SMTPatT (live h0 b); SMTPatT (modifies_1 b h0 h1)]
+  [smt_pat (live h0 b); smt_pat (modifies_1 b h0 h1)]
   = Buffer.lemma_intro_modifies_1 (as_buffer b) h0 h1
 
 let modifies_substruct_1 (#tsub #ta:Type) h0 h1 (sub:struct_ptr tsub) (a:struct_ptr ta) : Lemma
   (requires (live h0 a /\ modifies_1 sub h0 h1 /\ live h1 sub /\ includes a sub))
   (ensures  (modifies_1 a h0 h1 /\ live h1 a))
-  [SMTPatT (modifies_1 sub h0 h1); SMTPatT (includes a sub)]
+  [smt_pat (modifies_1 sub h0 h1); smt_pat (includes a sub)]
   = ()
 
 let modifies_popped_1' (#t:Type) (a:struct_ptr t) h0 h1 h2 h3 : Lemma
   (requires (live h0 a /\ HS.fresh_frame h0 h1 /\ HS.popped h2 h3 /\ modifies_1 a h1 h2))
   (ensures  (modifies_1 a h0 h3))
-  [SMTPatT (HS.fresh_frame h0 h1); SMTPatT (HS.popped h2 h3); SMTPatT (modifies_1 a h1 h2)]
+  [smt_pat (HS.fresh_frame h0 h1); smt_pat (HS.popped h2 h3); smt_pat (modifies_1 a h1 h2)]
   = ()
 
 let live_popped (#t:Type) (b:struct_ptr t) h0 h1 : Lemma
   (requires (HS.popped h0 h1 /\ live h0 b /\ frameOf b <> h0.HS.tip))
   (ensures  (live h1 b))
-  [SMTPatT (HS.popped h0 h1); SMTPatT (live h0 b)]
+  [smt_pat (HS.popped h0 h1); smt_pat (live h0 b)]
   = ()
 
 let live_fresh (#t:Type) (b:struct_ptr t) h0 h1 : Lemma
   (requires (HS.fresh_frame h0 h1 /\ live h0 b))
   (ensures  (live h1 b))
-  [SMTPatT (HS.fresh_frame h0 h1); SMTPatT (live h0 b)]
+  [smt_pat (HS.fresh_frame h0 h1); smt_pat (live h0 b)]
   = ()
 
 let modifies_poppable_1 #t h0 h1 (b:struct_ptr t) : Lemma
   (requires (modifies_1 b h0 h1 /\ HS.poppable h0))
   (ensures  (HS.poppable h1))
-  [SMTPatT (modifies_1 b h0 h1)]
+  [smt_pat (modifies_1 b h0 h1)]
   = ()
 
 

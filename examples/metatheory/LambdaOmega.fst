@@ -84,20 +84,20 @@ let esub_lam_renaming s = ()
 (* Substitution extensional; trivial with the extensionality axiom *)
 val esubst_extensional: s1:esub -> s2:esub{feq s1 s2} -> e:exp ->
                         Lemma (requires True) (ensures (esubst s1 e = esubst s2 e))
-                       (*[SMTPat (esubst s1 e);  SMTPat (esubst s2 e)]*)
+                       (*[smt_pat (esubst s1 e);  smt_pat (esubst s2 e)]*)
 let esubst_extensional s1 s2 e = ()
 
 (* This only works automatically with the patterns in subst_extensional above;
    it would be a lot cooler if this worked without, since that increases checking time.
-   Even worse, there is no way to prove this without the SMTPat (e.g. manually),
-   or to use the SMTPat only locally, in this definition (`using` needed). *)
+   Even worse, there is no way to prove this without the smt_pat (e.g. manually),
+   or to use the smt_pat only locally, in this definition (`using` needed). *)
 val esub_lam_hoist : t:typ -> e:exp -> s:esub -> Lemma (requires True)
       (ensures (esubst s (ELam t e) = ELam t (esubst (esub_lam s) e)))
-      (* [SMTPat (esubst (ELam t e) s)]
+      (* [smt_pat (esubst (ELam t e) s)]
       (\* -- this increases running time by 10 secs and adds variability *\) *)
 let esub_lam_hoist t e s = admit()
   // using esubst_extensional
-  //   (fun s1 s2 e -> [SMTPat (esubst s1 e);  SMTPat (esubst s2 e)])
+  //   (fun s1 s2 e -> [smt_pat (esubst s1 e);  smt_pat (esubst s2 e)])
 
 val esub_beta : exp -> Tot esub
 let esub_beta e = fun y -> if y = 0 then e
@@ -154,7 +154,7 @@ let tsub_lam s y =
 (* Type substitution extensional; trivial with the extensionality axiom *)
 val tsubst_extensional: s1:tsub -> s2:tsub{feq s1 s2} -> t:typ ->
                         Lemma (requires True) (ensures (tsubst s1 t = tsubst s2 t))
-(*                       [SMTPat (tsubst t s1);  SMTPat (tsubst t s2)]*)
+(*                       [smt_pat (tsubst t s1);  smt_pat (tsubst t s2)]*)
 let tsubst_extensional s1 s2 t = ()
 
 (* Same silly situation as for esub_lam_hoist *)

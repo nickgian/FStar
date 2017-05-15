@@ -122,7 +122,7 @@ val slice_upd: #a:Type -> s:seq a -> i:nat -> j:nat{i <= j /\ j <= length s}
   -> k:nat{k < length s} -> v:a -> Lemma
   (requires k < i \/ j <= k)
   (ensures  slice (upd s k v) i j == slice s i j)
-  [SMTPat (slice (upd s k v) i j)]
+  [smt_pat (slice (upd s k v) i j)]
 let slice_upd #a s i j k v =
   lemma_eq_intro (slice (upd s k v) i j) (slice s i j)
 
@@ -130,7 +130,7 @@ val upd_slice: #a:Type -> s:seq a -> i:nat -> j:nat{i <= j /\ j <= length s}
   -> k:nat{k < j - i} -> v:a -> Lemma
   (requires i + k < j)
   (ensures  upd (slice s i j) k v == slice (upd s (i + k) v) i j)
-  [SMTPat (upd (slice s i j) k v)]
+  [smt_pat (upd (slice s i j) k v)]
 let upd_slice #a s i j k v =
   lemma_eq_intro (upd (slice s i j) k v) (slice (upd s (i + k) v) i j)
 
@@ -567,7 +567,7 @@ val seq_mem_k: #a:eqtype -> s:seq a -> n:nat{n < Seq.length s} ->
     Lemma (requires True)
 	  (ensures (mem (Seq.index s n) s))
 	  (decreases n)
-	  [SMTPat (mem (Seq.index s n) s)]
+	  [smt_pat (mem (Seq.index s n) s)]
 let rec seq_mem_k #a s n = 
   if n = 0 then ()
   else let tl = tail s in
@@ -736,7 +736,7 @@ let cons_head_tail
 : Lemma
   (requires True)
   (ensures (s == cons (head s) (tail s)))
-  [SMTPat (cons (head s) (tail s))]
+  [smt_pat (cons (head s) (tail s))]
 = let _ : squash (slice s 0 1 == create 1 (index s 0)) =
       lemma_index_slice s 0 1 0;
       lemma_index_create 1 (index s 0) 0;
@@ -758,7 +758,7 @@ let suffix_of_tail
 : Lemma
   (requires True)
   (ensures ((tail s) `suffix_of` s))
-  [SMTPat ((tail s) `suffix_of` s)]
+  [smt_pat ((tail s) `suffix_of` s)]
 = cons_head_tail s    
 
 let index_cons_l

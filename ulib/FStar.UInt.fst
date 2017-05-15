@@ -18,7 +18,7 @@ val pow2_values: x:nat -> Lemma
    | 64 -> p=18446744073709551616
    | 128 -> p=0x100000000000000000000000000000000
    | _  -> True))
-  [SMTPat (pow2 x)]
+  [smt_pat (pow2 x)]
 let pow2_values x =
    match x with
    | 0  -> assert_norm (pow2 0 == 1)
@@ -213,18 +213,18 @@ let rec to_vec_lemma_2 #n a b =
 
 val inverse_aux: #n:nat -> vec:bv_t n -> i:nat{i < n} ->
   Lemma (requires True) (ensures index vec i = index (to_vec (from_vec vec)) i)
-        [SMTPat (index (to_vec (from_vec vec)) i)]
+        [smt_pat (index (to_vec (from_vec vec)) i)]
 let rec inverse_aux #n vec i = 
   if i = n - 1 then assert((from_vec vec) % 2 = (if index vec (n - 1) then 1 else 0)) else inverse_aux #(n - 1) (slice vec 0 (n - 1)) i
 
 val inverse_vec_lemma: #n:nat -> vec:bv_t n ->
   Lemma (requires True) (ensures equal vec (to_vec (from_vec vec)))
-        [SMTPat (to_vec (from_vec vec))]
+        [smt_pat (to_vec (from_vec vec))]
 let inverse_vec_lemma #n vec = ()
 
 val inverse_num_lemma: #n:nat -> num:uint_t n ->
   Lemma (requires True) (ensures num = from_vec (to_vec num))
-        [SMTPat (from_vec (to_vec num))]
+        [smt_pat (from_vec (to_vec num))]
 let inverse_num_lemma #n num = to_vec_lemma_2 #n num (from_vec (to_vec num))
 
 val from_vec_lemma_1: #n:nat -> a:bv_t n -> b:bv_t n ->
@@ -302,26 +302,26 @@ let slice_right_lemma #n a s =
 (* Relations between constants in BitVector and in UInt. *)
 val zero_to_vec_lemma: #n:pos -> i:nat{i < n} ->
   Lemma (requires True) (ensures index (to_vec (zero n)) i = index (zero_vec #n) i)
-        [SMTPat (index (to_vec (zero n)) i)]
+        [smt_pat (index (to_vec (zero n)) i)]
 let rec zero_to_vec_lemma #n i =
   if i = n - 1 then () else zero_to_vec_lemma #(n - 1) i
 
 val zero_from_vec_lemma: #n:pos ->
   Lemma (requires True) (ensures from_vec (zero_vec #n) = zero n)
-        [SMTPat (from_vec (zero_vec #n))]
+        [smt_pat (from_vec (zero_vec #n))]
 let zero_from_vec_lemma #n = to_vec_lemma_2 (from_vec (zero_vec #n)) (zero n)
 
 val one_to_vec_lemma: #n:pos -> i:nat{i < n} ->
   Lemma (requires True)
         (ensures index (to_vec (one n)) i = index (elem_vec #n (n - 1)) i)
-	[SMTPat (index (to_vec (one n)) i)]
+	[smt_pat (index (to_vec (one n)) i)]
 let one_to_vec_lemma #n i =
   if i = n - 1 then () else zero_to_vec_lemma #n i
 
 val pow2_to_vec_lemma: #n:pos -> p:nat{p < n} -> i:nat{i < n} ->
   Lemma (requires True)
         (ensures index (to_vec (pow2_n #n p)) i = index (elem_vec #n (n - p - 1)) i)
-	[SMTPat (index (to_vec (pow2_n #n p)) i)]
+	[smt_pat (index (to_vec (pow2_n #n p)) i)]
 let rec pow2_to_vec_lemma #n p i =
   if i = n - 1 then () 
   else if p = 0 then one_to_vec_lemma #n i
@@ -329,20 +329,20 @@ let rec pow2_to_vec_lemma #n p i =
 
 val pow2_from_vec_lemma: #n:pos -> p:nat{p < n} ->
   Lemma (requires True) (ensures from_vec (elem_vec #n p) = pow2_n #n (n - p - 1))
-        [SMTPat (from_vec (elem_vec #n p))]
+        [smt_pat (from_vec (elem_vec #n p))]
 let pow2_from_vec_lemma #n p =
   to_vec_lemma_2 (from_vec (elem_vec #n p)) (pow2_n #n (n - p - 1))
 
 val ones_to_vec_lemma: #n:pos -> i:nat{i < n} ->
   Lemma (requires True)
         (ensures index (to_vec (ones n)) i = index (ones_vec #n) i)
-	[SMTPat (index (to_vec (ones n)) i)]
+	[smt_pat (index (to_vec (ones n)) i)]
 let rec ones_to_vec_lemma #n i =
   if i = n - 1 then () else ones_to_vec_lemma #(n - 1) i
 
 val ones_from_vec_lemma: #n:pos ->
   Lemma (requires True) (ensures from_vec (ones_vec #n) = ones n)
-        [SMTPat (from_vec (ones_vec #n))]
+        [smt_pat (from_vec (ones_vec #n))]
 let ones_from_vec_lemma #n =
   to_vec_lemma_2 (from_vec (ones_vec #n)) (ones n)
 
@@ -361,26 +361,26 @@ let nth_lemma #n a b =
 (* Lemmas for constants *)
 val zero_nth_lemma: #n:pos -> i:nat{i < n} ->
   Lemma (requires True) (ensures nth (zero n) i = false)
-        [SMTPat (nth (zero n) i)]
+        [smt_pat (nth (zero n) i)]
 let rec zero_nth_lemma #n i = ()
 
 val pow2_nth_lemma: #n:pos -> p:nat{p < n} -> i:nat{i < n} ->
   Lemma (requires True)
         (ensures (i = n - p - 1 ==> nth (pow2_n #n p) i = true) /\
 	         (i <> n - p - 1 ==> nth (pow2_n #n p) i = false))
-        [SMTPat (nth (pow2_n #n p) i)]
+        [smt_pat (nth (pow2_n #n p) i)]
 let pow2_nth_lemma #n p i = ()
 
 val one_nth_lemma: #n:pos -> i:nat{i < n} ->
   Lemma (requires True)
         (ensures (i = n - 1 ==> nth (one n) i = true) /\
 	         (i < n - 1 ==> nth (one n) i = false))
-        [SMTPat (nth (one n) i)]
+        [smt_pat (nth (one n) i)]
 let one_nth_lemma #n i = ()
 
 val ones_nth_lemma: #n:pos -> i:nat{i < n} ->
   Lemma (requires True) (ensures (nth (ones n) i) = true)
-        [SMTPat (nth (ones n) i)]
+        [smt_pat (nth (ones n) i)]
 let rec ones_nth_lemma #n i = ()
 
 (* Bitwise operators *)
@@ -397,22 +397,22 @@ let lognot #n a = from_vec #n (lognot_vec #n (to_vec #n a))
 val logand_definition: #n:pos -> a:uint_t n -> b:uint_t n -> i:nat{i < n} ->
   Lemma (requires True)
 	(ensures (nth (logand a b) i = (nth a i && nth b i)))
-	[SMTPat (nth (logand a b) i)]
+	[smt_pat (nth (logand a b) i)]
 let logand_definition #n a b i = ()
 val logxor_definition: #n:pos -> a:uint_t n -> b:uint_t n -> i:nat{i < n} ->
   Lemma (requires True)
 	(ensures (nth (logxor a b) i = (nth a i <> nth b i)))
-	[SMTPat (nth (logxor a b) i)]
+	[smt_pat (nth (logxor a b) i)]
 let logxor_definition #n a b i = ()
 val logor_definition: #n:pos -> a:uint_t n -> b:uint_t n -> i:nat{i < n} ->
   Lemma (requires True)
 	(ensures (nth (logor a b) i = (nth a i || nth b i)))
-	[SMTPat (nth (logor a b) i)]
+	[smt_pat (nth (logor a b) i)]
 let logor_definition #n a b i = ()
 val lognot_definition: #n:pos -> a:uint_t n -> i:nat{i < n} ->
   Lemma (requires True)
 	(ensures (nth (lognot a) i = not(nth a i)))
-	[SMTPat (nth (lognot a) i)]
+	[smt_pat (nth (lognot a) i)]
 let lognot_definition #n a i = ()
 
 (* Bitwise operators lemmas *)
@@ -466,7 +466,7 @@ private let xor (b:bool) (b':bool) : Tot bool = b <> b'
 private let xor_lemma (a:bool) (b:bool) : Lemma
   (requires (True))
   (ensures  (xor (xor a b) b = a))
-  [SMTPat (xor (xor a b) b)]
+  [smt_pat (xor (xor a b) b)]
   = ()
 
 val logxor_inv: #n:pos -> a:uint_t n -> b:uint_t n -> Lemma
@@ -522,7 +522,7 @@ let lognot_lemma_1 #n = nth_lemma (lognot #n (zero n)) (ones n)
 private val to_vec_mod_pow2: #n:nat -> a:uint_t n -> m:pos -> i:nat{n - m <= i /\ i < n} ->
   Lemma (requires (a % pow2 m == 0))
         (ensures  (index (to_vec a) i == false))
-        [SMTPat (index (to_vec #n a) i); SMTPatT (a % pow2 m == 0)]
+        [smt_pat (index (to_vec #n a) i); smt_pat (a % pow2 m == 0)]
 let rec to_vec_mod_pow2 #n a m i =
   if i = n - 1 then
     begin
@@ -541,7 +541,7 @@ let rec to_vec_mod_pow2 #n a m i =
 private val to_vec_lt_pow2: #n:nat -> a:uint_t n -> m:nat -> i:nat{i < n - m} ->
   Lemma (requires (a < pow2 m))
         (ensures  (index (to_vec a) i == false))
-        [SMTPat (index (to_vec #n a) i); SMTPatT (a < pow2 m)]
+        [smt_pat (index (to_vec #n a) i); smt_pat (a < pow2 m)]
 let rec to_vec_lt_pow2 #n a m i =
   if n = 0 then ()
   else
@@ -560,7 +560,7 @@ private val index_to_vec_ones: #n:pos -> m:nat{m <= n} -> i:nat{i < n} ->
         (ensures (pow2 m <= pow2 n /\
           (i < n - m ==> index (to_vec #n (pow2 m - 1)) i == false) /\
           (n - m <= i ==> index (to_vec #n (pow2 m - 1)) i == true)))
-        [SMTPat (index (to_vec #n (pow2 m - 1)) i)]
+        [smt_pat (index (to_vec #n (pow2 m - 1)) i)]
 let rec index_to_vec_ones #n m i =
    let a = pow2 m - 1 in
    pow2_le_compat n m;
@@ -618,22 +618,22 @@ let shift_right #n a s = from_vec (shift_right_vec #n (to_vec #n a) s)
 val shift_left_lemma_1: #n:pos -> a:uint_t n -> s:nat -> i:nat{i < n && i >= n - s} ->
   Lemma (requires True)
 	(ensures (nth (shift_left #n a s) i = false))
-	[SMTPat (nth (shift_left #n a s) i)]
+	[smt_pat (nth (shift_left #n a s) i)]
 let shift_left_lemma_1 #n a s i = ()
 val shift_left_lemma_2: #n:pos -> a:uint_t n -> s:nat -> i:nat{i < n && i < n - s} ->
   Lemma (requires True)
         (ensures (nth (shift_left #n a s) i = nth #n a (i + s)))
-	[SMTPat (nth (shift_left #n a s) i)]
+	[smt_pat (nth (shift_left #n a s) i)]
 let shift_left_lemma_2 #n a s i = ()
 val shift_right_lemma_1: #n:pos -> a:uint_t n -> s:nat -> i:nat{i < n && i < s} ->
   Lemma (requires True)
 	(ensures (nth (shift_right #n a s) i = false))
-	[SMTPat (nth (shift_right #n a s) i)]
+	[smt_pat (nth (shift_right #n a s) i)]
 let shift_right_lemma_1 #n a s i = ()
 val shift_right_lemma_2: #n:pos -> a:uint_t n -> s:nat -> i:nat{i < n && i >= s} ->
   Lemma (requires True)
         (ensures (nth (shift_right #n a s) i = nth #n a (i - s)))
-	[SMTPat (nth (shift_right #n a s) i)]
+	[smt_pat (nth (shift_right #n a s) i)]
 let shift_right_lemma_2 #n a s i = ()
 
 (* Lemmas with shift operators and bitwise operators *)
@@ -692,7 +692,7 @@ let shift_left_value_aux_3 #n a s =
 val shift_left_value_lemma: #n:pos -> a:uint_t n -> s:nat ->
   Lemma (requires True)
         (ensures shift_left #n a s = (a * pow2 s) % pow2 n)
-	[SMTPat (shift_left #n a s)]
+	[smt_pat (shift_left #n a s)]
 let shift_left_value_lemma #n a s =
   if s >= n then shift_left_value_aux_1 #n a s
   else if s = 0 then shift_left_value_aux_2 #n a
@@ -720,7 +720,7 @@ let shift_right_value_aux_3 #n a s =
 val shift_right_value_lemma: #n:pos -> a:uint_t n -> s:nat ->
   Lemma (requires True)
         (ensures shift_right #n a s = a / pow2 s)
-	[SMTPat (shift_right #n a s)]
+	[smt_pat (shift_right #n a s)]
 let shift_right_value_lemma #n a s =
   if s >= n then shift_right_value_aux_1 #n a s
   else if s = 0 then shift_right_value_aux_2 #n a
@@ -794,7 +794,7 @@ let shift_right_value_lemma #n a s =
 (*     /\ pow2 62 = 4611686018427387904 *)
 (*     /\ pow2 63 = 9223372036854775808 *)
 (*     /\ pow2 64 = 18446744073709551616 )) *)
-(*     [SMTPat (pow2 n)] *)
+(*     [smt_pat (pow2 n)] *)
 (* let lemma_pow2_values n = admit() *)
 
 (* assume Lemma_pow2_values: *)

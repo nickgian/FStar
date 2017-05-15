@@ -115,7 +115,7 @@ let rec lsubst_eqns l = function
 val lemma_lsubst_eqns_nil: e:eqns -> Lemma
   (requires True)
   (ensures (lsubst_eqns [] e = e))
-  [SMTPat (lsubst_eqns [] e)]
+  [smt_pat (lsubst_eqns [] e)]
 let rec lemma_lsubst_eqns_nil = function
   | [] -> ()
   | _::tl -> lemma_lsubst_eqns_nil tl
@@ -183,7 +183,7 @@ let rec solved = function
 val lsubst_distributes_over_F: l:list subst -> t1:term -> t2:term -> Lemma
        (requires (True))
        (ensures (lsubst_term l (F t1 t2) = F (lsubst_term l t1) (lsubst_term l t2)))
-       [SMTPat (lsubst_term l (F t1 t2))]
+       [smt_pat (lsubst_term l (F t1 t2))]
 let rec lsubst_distributes_over_F l t1 t2 = match l with
   | [] -> ()
   | hd::tl -> lsubst_distributes_over_F tl t1 t2
@@ -201,7 +201,7 @@ let rec lemma_extend_lsubst_distributes_term l l' e = match l with
 val lemma_extend_lsubst_distributes_eqns: l:list subst -> l':list subst -> e:eqns -> Lemma
        (requires True)
        (ensures (lsubst_eqns (extend_lsubst l l') e = lsubst_eqns l (lsubst_eqns l' e)))
-       [SMTPat (lsubst_eqns (extend_lsubst l l') e)]
+       [smt_pat (lsubst_eqns (extend_lsubst l l') e)]
 let rec lemma_extend_lsubst_distributes_eqns l l' e = match e with
   | [] -> ()
   | (t1, t2)::tl ->
@@ -332,7 +332,7 @@ val lemma_not_solveable_cons_aux: x:nat -> t:term -> tl:eqns -> l:list subst -> 
   (requires (not_solveable_eqns (lsubst_eqns [x,t] tl)
 	     /\ solved (lsubst_eqns l ((V x,t)::tl))))
   (ensures False)
-  [SMTPat (solved (lsubst_eqns l ((V x,t)::tl)))]
+  [smt_pat (solved (lsubst_eqns l ((V x,t)::tl)))]
 let lemma_not_solveable_cons_aux x t tl l = lemma_subst_eqns l x t tl
 
 val lemma_not_solveable_cons:  x:nat -> t:term -> tl:eqns -> Lemma

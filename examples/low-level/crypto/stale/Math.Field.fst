@@ -26,15 +26,15 @@ assume new type equal: felem -> felem -> Type
 assume val lemma_equal_intro: x:felem -> y:felem -> Lemma
   (requires (x == y))
   (ensures (equal x y))
-  [SMTPatT (equal x y)]
+  [smt_pat (equal x y)]
 assume val lemma_equal_elim: x:felem -> y:felem -> Lemma
   (requires (equal x y))
   (ensures (x = y))
-  [SMTPatT (equal x y)]
+  [smt_pat (equal x y)]
 assume val lemma_equal_refl: x:felem -> y:felem -> Lemma
   (requires (x = y))
   (ensures (equal x y))
-  [SMTPatT (equal x y)]
+  [smt_pat (equal x y)]
 
 (* Subtraction and division definitions *)
 val sub: x:felem -> y:felem -> Tot felem
@@ -66,7 +66,7 @@ val sub_lemma: x:felem -> y:felem ->
   Lemma
     (requires (x <> y))
     (ensures (sub x y <> zero))
-    [SMTPat (sub x y)]
+    [smt_pat (sub x y)]
 let sub_lemma x y = field_is_group_1 ()
 
 (* Morphism between integers and field elements *)

@@ -76,82 +76,82 @@ abstract type equal (#k:eqtype) (#v:eqtype) (#f:cmp k) (m1:ordmap k v f) (m2:ord
 abstract val eq_intro: #k:eqtype -> #v:eqtype -> #f:cmp k -> m1:ordmap k v f -> m2:ordmap k v f
               -> Lemma (requires (forall x. select #k #v #f x m1 = select #k #v #f x m2))
                       (ensures (equal m1 m2))
-                 [SMTPatT (equal m1 m2)]
+                 [smt_pat (equal m1 m2)]
   
 abstract val eq_lemma: #k:eqtype -> #v:eqtype -> #f:cmp k -> m1:ordmap k v f -> m2:ordmap k v f
               -> Lemma (requires (equal m1 m2))
                       (ensures (m1 == m2))
-                 [SMTPatT (equal m1 m2)]
+                 [smt_pat (equal m1 m2)]
 
 abstract val upd_order: #k:eqtype -> #v:eqtype -> #f:cmp k -> x:k -> y:v -> x':k -> y':v
                -> m:ordmap k v f
                -> Lemma (requires (x =!= x'))
                        (ensures (equal (update #k #v #f x y (update #k #v #f x' y' m))
                                        (update #k #v #f x' y' (update #k #v #f x y m))))
-                  [SMTPat (update #k #v #f x y (update #k #v #f x' y' m))] //NS:This pattern is too aggresive; it will fire for any pair of updates
+                  [smt_pat (update #k #v #f x y (update #k #v #f x' y' m))] //NS:This pattern is too aggresive; it will fire for any pair of updates
                   
 abstract val upd_same_k: #k:eqtype -> #v:eqtype -> #f:cmp k -> x:k -> y:v -> y':v
                 -> m:ordmap k v f
                 -> Lemma (requires (True))
                         (ensures (equal (update #k #v #f x y (update #k #v #f x y' m))
 					(update #k #v #f x y m)))
-                   [SMTPat (update #k #v #f x y (update #k #v #f x y' m))] //NS:This pattern is too aggresive; it will fire for any pair of updates
+                   [smt_pat (update #k #v #f x y (update #k #v #f x y' m))] //NS:This pattern is too aggresive; it will fire for any pair of updates
 
 abstract val sel_upd1: #k:eqtype -> #v:eqtype -> #f:cmp k -> x:k -> y:v -> m:ordmap k v f
               -> Lemma (requires True) (ensures select #k #v #f x
                                                 (update #k #v #f x y m) = Some y)
-                 [SMTPat (select #k #v #f x (update #k #v #f x y m))]
+                 [smt_pat (select #k #v #f x (update #k #v #f x y m))]
 
 abstract val sel_upd2: #k:eqtype -> #v:eqtype -> #f:cmp k -> x:k -> y:v -> x':k -> m:ordmap k v f
               -> Lemma (requires True)
                        (ensures (x =!= x' ==> (select #k #v #f x' (update #k #v #f x y m)
                                                = select #k #v #f x' m)))
-                 [SMTPat (select #k #v #f x' (update #k #v #f x y m))]
+                 [smt_pat (select #k #v #f x' (update #k #v #f x y m))]
 
 abstract val sel_empty: #k:eqtype -> #v:eqtype -> #f:cmp k -> x:k
                -> Lemma (requires True)
                         (ensures (select #k #v #f x (empty #k #v #f) = None))
-                  [SMTPat (select #k #v #f x (empty #k #v #f))]
+                  [smt_pat (select #k #v #f x (empty #k #v #f))]
                   
 abstract val sel_contains: #k:eqtype -> #v:eqtype -> #f:cmp k -> x:k -> m:ordmap k v f
                   -> Lemma (requires (True))
                            (ensures (contains #k #v #f x m = Some? (select #k #v #f x m)))
-                     [SMTPat (select #k #v #f x m); SMTPat (contains #k #v #f x m)]
+                     [smt_pat (select #k #v #f x m); smt_pat (contains #k #v #f x m)]
 
 abstract val contains_upd1: #k:eqtype -> #v:eqtype -> #f:cmp k -> x:k -> y:v -> x':k
                    -> m:ordmap k v f
                    -> Lemma (requires True)
                             (ensures (contains #k #v #f x' (update #k #v #f x y m) =
                                       (x = x' || contains #k #v #f x' m)))
-                      [SMTPat (contains #k #v #f x' (update #k #v #f x y m))]
+                      [smt_pat (contains #k #v #f x' (update #k #v #f x y m))]
 
 abstract val contains_upd2: #k:eqtype -> #v:eqtype -> #f:cmp k -> x:k -> y:v -> x':k
                    -> m:ordmap k v f
                    -> Lemma (requires True)
                             (ensures (x =!= x' ==> (contains #k #v #f x' (update #k #v #f x y m)
                                                     = contains #k #v #f x' m)))
-                      [SMTPat (contains #k #v #f x' (update #k #v #f x y m))]
+                      [smt_pat (contains #k #v #f x' (update #k #v #f x y m))]
 
 abstract val contains_empty: #k:eqtype -> #v:eqtype -> #f:cmp k -> x:k
                     -> Lemma (requires True)
                              (ensures (not (contains #k #v #f x (empty #k #v #f))))
-                       [SMTPat (contains #k #v #f x (empty #k #v #f))]
+                       [smt_pat (contains #k #v #f x (empty #k #v #f))]
 
 abstract val contains_remove: #k:eqtype -> #v:eqtype -> #f:cmp k -> x:k -> y:k -> m:ordmap k v f
                      -> Lemma (requires True)
                               (ensures (contains #k #v #f x (remove #k #v #f y m) =
                                        (contains #k #v #f x m && not (x = y))))
-                        [SMTPat (contains #k #v #f x (remove #k #v #f y m))]
+                        [smt_pat (contains #k #v #f x (remove #k #v #f y m))]
                   
 abstract val eq_remove: #k:eqtype -> #v:eqtype -> #f:cmp k -> x:k -> m:ordmap k v f
               -> Lemma (requires (not (contains #k #v #f x m)))
                       (ensures (equal m (remove #k #v #f x m)))
-                 [SMTPat (remove #k #v #f x m)]
+                 [smt_pat (remove #k #v #f x m)]
 
 abstract val choose_empty: #k:eqtype -> #v:eqtype -> #f:cmp k
                  -> Lemma (requires True) (ensures (None? (choose #k #v #f
                                                              (empty #k #v #f))))
-                    [SMTPat (choose #k #v #f (empty #k #v #f))]
+                    [smt_pat (choose #k #v #f (empty #k #v #f))]
 
 abstract val choose_m: #k:eqtype -> #v:eqtype -> #f:cmp k -> m:ordmap k v f
              -> Lemma (requires (~ (equal m (empty #k #v #f))))
@@ -161,51 +161,51 @@ abstract val choose_m: #k:eqtype -> #v:eqtype -> #f:cmp k -> m:ordmap k v f
                                 (equal m (update #k #v #f (fst (Some?.v (choose #k #v #f m)))
                                                      (snd (Some?.v (choose #k #v #f m)))
                                                      (remove #k #v #f (fst (Some?.v (choose #k #v #f m))) m)))))
-                [SMTPat (choose #k #v #f m)]
+                [smt_pat (choose #k #v #f m)]
 
 abstract val size_empty: #k:eqtype -> #v:eqtype -> #f:cmp k
                 -> Lemma (requires True)
                          (ensures (size #k #v #f (empty #k #v #f) = 0))
-                   [SMTPat (size #k #v #f (empty #k #v #f))]
+                   [smt_pat (size #k #v #f (empty #k #v #f))]
                    
 abstract val size_remove: #k:eqtype -> #v:eqtype -> #f:cmp k -> y:k -> m:ordmap k v f
                 -> Lemma (requires (contains #k #v #f y m))
                          (ensures (size #k #v #f m = size #k #v #f (remove #k #v #f y m) + 1))
-                   [SMTPat (size #k #v #f (remove #k #v #f y m))]
+                   [smt_pat (size #k #v #f (remove #k #v #f y m))]
 
 abstract val dom_lemma: #k:eqtype -> #v:eqtype -> #f:cmp k -> x:k -> m:ordmap k v f
                -> Lemma (requires True)
                         (ensures (contains #k #v #f x m <==>
                                   OrdSet.mem #k #f x (dom #k #v #f m)))
-                  [SMTPat (mem #k #f x (dom #k #v #f m))]
+                  [smt_pat (mem #k #f x (dom #k #v #f m))]
 
 abstract val contains_const_on: #k:eqtype -> #v:eqtype -> #f:cmp k -> d:ordset k f -> x:v -> y:k
                   -> Lemma (requires (True))
                            (ensures (mem y d = contains y (const_on d x)))
                                     //(contains y (const_on d x) ==> Some?.v (select p w) = x)))
-                     [SMTPat (contains #k #v #f y (const_on #k #v #f d x))]
+                     [smt_pat (contains #k #v #f y (const_on #k #v #f d x))]
                      
 abstract val select_const_on: #k:eqtype -> #v:eqtype -> #f:cmp k -> d:ordset k f -> x:v -> y:k
                      -> Lemma (requires (True))
                              (ensures (mem y d ==> (contains y (const_on d x) /\ Some?.v (select y (const_on d x)) = x)))
-                    [SMTPat (select #k #v #f y (const_on #k #v #f d x))]
+                    [smt_pat (select #k #v #f y (const_on #k #v #f d x))]
 
 abstract val sel_rem1: #k:eqtype -> #v:eqtype -> #f:cmp k -> x:k -> m:ordmap k v f
               -> Lemma (requires True) (ensures select #k #v #f x
                                                 (remove #k #v #f x m) = None)
-                 [SMTPat (select #k #v #f x (remove #k #v #f x m))]
+                 [smt_pat (select #k #v #f x (remove #k #v #f x m))]
 
 abstract val sel_rem2: #k:eqtype -> #v:eqtype -> #f:cmp k -> x:k -> x':k -> m:ordmap k v f
               -> Lemma (requires True) (ensures (x =!= x' ==>
                                                  select #k #v #f x'
                                                  (remove #k #v #f x m) = select #k #v #f x' m))
-                 [SMTPat (select #k #v #f x' (remove #k #v #f x m))]
+                 [smt_pat (select #k #v #f x' (remove #k #v #f x m))]
 
 abstract val rem_upd: #k:eqtype -> #v:eqtype -> #f:cmp k -> x:k -> y:v -> x':k -> m:ordmap k v f
              -> Lemma (requires (True)) (ensures (x =!= x' ==>
                                                   equal (update #k #v #f x y (remove #k #v #f x' m))
                                                         (remove #k #v #f x' (update #k #v #f x y m))))
-                [SMTPat (update #k #v #f x y (remove #k #v #f x' m))]
+                [smt_pat (update #k #v #f x y (remove #k #v #f x' m))]
 
 let eq_intro (#k:eqtype) (#v:eqtype) #f m1 m2 = ()
 

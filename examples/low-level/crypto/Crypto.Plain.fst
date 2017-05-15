@@ -48,7 +48,7 @@ let reveal #i #l p = p
 val repr_injective : i:id -> l:plainLen -> p:plain i l -> Lemma
   (requires True)
   (ensures (make #i l (as_bytes p) == p))
-  [SMTPat (as_bytes p)]
+  [smt_pat (as_bytes p)]
 let repr_injective i l p = ()
 *)
 
@@ -77,7 +77,7 @@ let hide_buffer i #l b = b
 val as_buffer_injective : i:id -> l:plainLen -> p:plainBuffer i l -> Lemma
   (requires True)
   (ensures (hide_buffer i (as_buffer p) == p))
-  [SMTPat (as_buffer p)]
+  [smt_pat (as_buffer p)]
 let as_buffer_injective i l p = ()
 
 

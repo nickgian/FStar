@@ -92,16 +92,16 @@ let esubst_lam_renaming s = ()
 (* Substitution extensional; trivial with the extensionality axiom *)
 val esubst_extensional: s1:esub -> s2:esub{FEq s1 s2} -> e:exp ->
                         Lemma (requires True) (ensures (esubst s1 e = esubst s2 e))
-                       (* [SMTPat (esubst e s1);  SMTPat (esubst e s2)] *)
+                       (* [smt_pat (esubst e s1);  smt_pat (esubst e s2)] *)
 let esubst_extensional s1 s2 e = ()
 
 (* This only works automatically with the patterns in subst_extensional above;
    it would be a lot cooler if this worked without, since that increases checking time.
-   Even worse, there is no way to prove this without the SMTPat (e.g. manually),
-   or to use the SMTPat only locally, in this definition (`using` needed). *)
+   Even worse, there is no way to prove this without the smt_pat (e.g. manually),
+   or to use the smt_pat only locally, in this definition (`using` needed). *)
 val esubst_lam_hoist : t:typ -> e:exp -> s:esub -> Lemma (requires True)
       (ensures (esubst s (ELam t e) = ELam t (esubst (esubst_lam s) e)))
-      (* [SMTPat (esubst (ELam t e) s)]
+      (* [smt_pat (esubst (ELam t e) s)]
       (\* -- this increases running time by 10 secs and adds variability *\) *)
 let esubst_lam_hoist t e s = admit()
 
@@ -292,7 +292,7 @@ let tsubst_lam s y =
 (* Type substitution extensional; trivial with the extensionality axiom *)
 val tsubst_extensional: s1:tsub -> s2:tsub{FEq s1 s2} -> t:typ ->
                         Lemma (requires True) (ensures (tsubst s1 t = tsubst s2 t))
-(*                       [SMTPat (tsubst t s1);  SMTPat (tsubst t s2)]*)
+(*                       [smt_pat (tsubst t s1);  smt_pat (tsubst t s2)]*)
 let tsubst_extensional s1 s2 t = ()
 
 (* Same silly situation as for esubst_lam_hoist *)

@@ -156,7 +156,7 @@ let rec free_in_context x e g =
 val typable_empty_closed : x:int -> e:exp -> Lemma
       (requires (Some? (typing empty e)))
       (ensures (not(appears_free_in x e)))
-      [SMTPat (appears_free_in x e)]
+      [smt_pat (appears_free_in x e)]
 let typable_empty_closed x e = free_in_context x e empty
 
 let equal (g1:env) (g2:env) : Type0 = (forall (x:int). g1 x=g2 x)

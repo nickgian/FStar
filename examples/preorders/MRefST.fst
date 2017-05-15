@@ -49,7 +49,7 @@ val contains_lemma : #a:Type ->
 		     m:mref a r ->
 		     Lemma (requires (contains m h))
 			   (ensures  (MRefHeap.contains h m))
-		     [SMTPat (contains m h)]
+		     [smt_pat (contains m h)]
 let contains_lemma #a #r h m = ()
 
 
@@ -205,7 +205,7 @@ val stable_on_heap_stable : #a:Type ->
 				               stable_on_heap_aux m p h0 h1
 					       ==>
 					       (p h0 /\ heap_rel h0 h1 ==> p h1)))
-		            [SMTPat (stable_on_heap m p); SMTPat (stable heap_rel p)]
+		            [smt_pat (stable_on_heap m p); smt_pat (stable heap_rel p)]
 let stable_on_heap_stable #a #r m p = ()
 
 

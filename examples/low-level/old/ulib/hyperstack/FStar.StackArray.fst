@@ -163,5 +163,5 @@ let sub #a s idx len =
 (* let lemma_array_ineq_1 (#a:Type) (#a':Type) (x:array a) (y:array a') *)
 (*   : Lemma (requires (a <> a')) *)
 (* 	  (ensures (as_ref x =!= as_ref y)) *)
-(* 	  [SMTPat (a <> a')] *)
+(* 	  [smt_pat (a <> a')] *)
 (*   = admit() // TODO *)

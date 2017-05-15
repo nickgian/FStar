@@ -119,7 +119,7 @@ let rec free_in_context x #e #g #t h =
 
 val typable_empty_not_free : x:var -> #e:exp -> #t:typ -> typing empty e t ->
       Lemma (ensures (not (appears_free_in x e)))
-(*      [SMTPat (appears_free_in x e)] -- CH: adding this makes it fail! *)
+(*      [smt_pat (appears_free_in x e)] -- CH: adding this makes it fail! *)
 let typable_empty_not_free x #e #t h = free_in_context x h
 
 val below : x:var -> e:exp -> Tot bool (decreases e)

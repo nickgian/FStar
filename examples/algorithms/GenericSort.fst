@@ -32,7 +32,7 @@ val sorted_smaller: #a:eqtype
                 ->  key:(a -> Tot int)
                 ->  Lemma (requires (sorted (x::l) key /\ mem y l))
                          (ensures (key x <= key y))
-                         [SMTPat (sorted (x::l) key); SMTPat (mem y l)]
+                         [smt_pat (sorted (x::l) key); smt_pat (mem y l)]
 let rec sorted_smaller #a x y l key = match l with
     | [] -> ()
     | z::zs -> if key z = key y then () else sorted_smaller x y zs key

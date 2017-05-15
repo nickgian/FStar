@@ -116,7 +116,7 @@ let rec free_in_context x #e #g #t h =
 
 val typable_empty_closed : x:var -> #e:exp -> #t:ty -> rtyping empty e t ->
       Lemma (ensures (not(appears_free_in x e)))
-(*      [SMTPat (appears_free_in x e)] -- CH: adding this makes it fail! *)
+(*      [smt_pat (appears_free_in x e)] -- CH: adding this makes it fail! *)
 let typable_empty_closed x #e #t h = free_in_context x h
 
 val typable_empty_closed' : #e:exp -> #t:ty -> rtyping empty e t ->

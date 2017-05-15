@@ -24,12 +24,12 @@ assume val mul_pow: x:elem -> y:elem -> Lemma ((g^x) * (g^y) == g^((x + y) % q))
 assume val mod_plus_minus: a:elem -> b:elem -> Lemma
   (requires True)
   (ensures  (((a + b) % q - b) % q == a))
-  [SMTPat (((a + b) % q - b) % q)]
+  [smt_pat (((a + b) % q - b) % q)]
 
 assume val mod_minus_plus: a:elem -> b:elem -> Lemma
   (requires True)
   (ensures  (((a - b) % q + b) % q == a))
-  [SMTPat (((a - b) % q + b) % q)]
+  [smt_pat (((a - b) % q + b) % q)]
 
 let bij' (m:group) =
   let f    = fun h -> upd h (to_id 0) ((sel h (to_id 0) - log m) % q) in
@@ -51,7 +51,7 @@ let elgamal' (m:group) =
 val elgamal_prop: m:group -> z:elem -> Lemma
   (requires True)
   (ensures (g^((z - log m) %q)) * m == g^z)
-  [SMTPat ((g^(z - log m) % q) * m) ]
+  [smt_pat ((g^(z - log m) % q) * m) ]
 let elgamal_prop m z =
   pow_log m;
   mul_pow ((z - log m) % q) (log m);

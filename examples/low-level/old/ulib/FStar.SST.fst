@@ -90,7 +90,7 @@ assume val recall_region: i:rid -> ST unit
 let lemma_ref_ineq_1 (#a:Type) (#a':Type) (x:ref a) (y:ref a')
   : Lemma (requires (a <> a'))
 	  (ensures (as_ref x =!= as_ref y))
-	  [SMTPat (a <> a')]
+	  [smt_pat (a <> a')]
   = stack_to_ref_lemma_3 x y
 
 (* Tests *)

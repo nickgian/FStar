@@ -12,7 +12,7 @@ open Low.Bytes
 let lemma_slice_sub_1 (#a:Type{hasEq a}) (s:Seq.seq a) (s':Seq.seq a) (a:nat) (b:nat{a <= b /\ b <= Seq.length s /\ b <= Seq.length s'}) : Lemma
   (requires (s == s'))
   (ensures  (Seq.slice s a b == Seq.slice s' a b))
-  [SMTPat (Seq.slice s a b); SMTPat (Seq.slice s' a b)]
+  [smt_pat (Seq.slice s a b); smt_pat (Seq.slice s' a b)]
   = ()
 
 val lemma_slice_0: #a:Type -> s:Seq.seq a -> i:nat -> j:nat{i <= j && j <= Seq.length s} -> Lemma
@@ -24,7 +24,7 @@ let lemma_slice_sub_2 s (a:nat) (b:nat) (a':nat) (b':nat{b - a >= b' /\ a <= b /
   (requires (True))
   (ensures  (Seq.length (Seq.slice s a b) = b - a
     /\ Seq.slice (Seq.slice s a b) a' b' == Seq.slice s (a+a') (a+b') ))
-  [SMTPat (Seq.slice (Seq.slice s a b) a' b')]
+  [smt_pat (Seq.slice (Seq.slice s a b) a' b')]
   = Seq.lemma_len_slice s a b;
     Seq.lemma_len_slice (Seq.slice s a b) a' b';
     Seq.lemma_len_slice s (a+a') (a+b');
@@ -41,7 +41,7 @@ let lemma_slice_sub_2 s (a:nat) (b:nat) (a':nat) (b':nat{b - a >= b' /\ a <= b /
 let lemma_equal s s' (i:nat) : Lemma
   (requires (s == s' /\ i < Seq.length s))
   (ensures  (Seq.length s = Seq.length s' /\ i < Seq.length s /\ Seq.index s i == Seq.index s' i))
-  [SMTPat (Seq.index s i); SMTPat (s == s')]
+  [smt_pat (Seq.index s i); smt_pat (s == s')]
   = ()
 
 val xor_seq_bytes: s1:Seq.seq UInt8.t -> s2:Seq.seq UInt8.t -> len:nat -> Pure (Seq.seq UInt8.t)

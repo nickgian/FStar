@@ -161,7 +161,7 @@ let equal_domains (m0:mem) (m1:mem) =
 let lemma_equal_domains_trans (m0:mem) (m1:mem) (m2:mem) : Lemma
   (requires (equal_domains m0 m1 /\ equal_domains m1 m2))
   (ensures  (equal_domains m0 m2))
-  [SMTPat (equal_domains m0 m1); SMTPat (equal_domains m1 m2)]
+  [smt_pat (equal_domains m0 m1); smt_pat (equal_domains m1 m2)]
   = ()
 
 let equal_stack_domains (m0:mem) (m1:mem) =
@@ -171,7 +171,7 @@ let equal_stack_domains (m0:mem) (m1:mem) =
 let lemma_equal_stack_domains_trans (m0:mem) (m1:mem) (m2:mem) : Lemma
   (requires (equal_stack_domains m0 m1 /\ equal_stack_domains m1 m2))
   (ensures  (equal_stack_domains m0 m2))
-  [SMTPat (equal_stack_domains m0 m1); SMTPat (equal_stack_domains m1 m2)]
+  [smt_pat (equal_stack_domains m0 m1); smt_pat (equal_stack_domains m1 m2)]
   = ()
 
 let modifies (s:Set.set rid) (m0:mem) (m1:mem) =
@@ -219,7 +219,7 @@ let lemma_upd_1 #a (h:mem) (x:reference a) (v:a) : Lemma
 	    /\ modifies_one (frameOf x) h (upd h x v)
 	    /\ modifies_ref (frameOf x) (Set.singleton (as_addr x)) h (upd h x v)
 	    /\ sel (upd h x v) x == v ))
-  [SMTPat (upd h x v); SMTPatT (contains h x)]
+  [smt_pat (upd h x v); smt_pat (contains h x)]
   = ()
 
 let lemma_upd_2 (#a:Type) (h:mem) (x:reference a) (v:a) : Lemma
@@ -228,13 +228,13 @@ let lemma_upd_2 (#a:Type) (h:mem) (x:reference a) (v:a) : Lemma
 	    /\ modifies_one h.tip h (upd h x v)
 	    /\ modifies_ref h.tip Set.empty h (upd h x v)
 	    /\ sel (upd h x v) x == v ))
-  [SMTPat (upd h x v); SMTPatT (x `unused_in` h)]
+  [smt_pat (upd h x v); smt_pat (x `unused_in` h)]
   = ()
 
 val lemma_live_1: #a:Type ->  #a':Type -> h:mem -> x:reference a -> x':reference a' -> Lemma
   (requires (contains h x /\ x' `unused_in` h))
   (ensures  (x.id <> x'.id \/ ~ (as_ref x === as_ref x')))
-  [SMTPat (contains h x); SMTPat (x' `unused_in` h)]
+  [smt_pat (contains h x); smt_pat (x' `unused_in` h)]
 let lemma_live_1 #a #a' h x x' = ()
 
 let above_tip_is_live (#a:Type) (m:mem) (x:reference a) : Lemma
@@ -248,7 +248,7 @@ let above_tip_is_live (#a:Type) (m:mem) (x:reference a) : Lemma
 let contains_implies_weak_contains (#a:Type) (h:mem) (x:reference a) :Lemma
   (requires (True))
   (ensures (contains h x ==> weak_contains h x))
-  [SMTPatOr [[SMTPat (contains h x)]; [SMTPat (weak_contains h x)]] ]
+  [smt_pat_or [[smt_pat (contains h x)]; [smt_pat (weak_contains h x)]] ]
   = ()
 
 noeq type some_ref =

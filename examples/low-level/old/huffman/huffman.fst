@@ -66,14 +66,14 @@ val live_node_after_write_lemma: #a:Type -> rw:(lref a) -> v:a
                                  -> n:located node -> m:smem{live_node n m}
                                  -> Lemma (requires (True))
                                           (ensures (live_node n (writeMemAux rw m v)))
-                                    [SMTPat (writeMemAux rw m v); SMTPat (live_node n m)]
+                                    [smt_pat (writeMemAux rw m v); smt_pat (live_node n m)]
 let live_node_after_write_lemma rw v n m = admit ()
 
 val live_node_after_ralloc_lemma: #a:Type -> r:(lref a) -> v:a -> n:located node
                             -> m:smem{isNonEmpty (st m) /\ not (contains (topRegion m) r) /\ live_node n m}
                             -> Lemma (requires (True))
                                      (ensures (live_node n (allocateInTopR r v m)))
-                               [SMTPat (allocateInTopR r v m); SMTPat (live_node n m)]
+                               [smt_pat (allocateInTopR r v m); smt_pat (live_node n m)]
 let live_node_after_ralloc_lemma r v n m = admit ()
 
 (* projectors *)
@@ -133,7 +133,7 @@ val live_list_after_write_lemma: #a:Type -> rw:(lref a) -> v:a
                                  -> l:list (located node) -> m:smem{live_list l m}
                                  -> Lemma (requires (True))
                                           (ensures (live_list l (writeMemAux rw m v)))
-                                    [SMTPat (writeMemAux rw m v); SMTPat (live_list l m)]
+                                    [smt_pat (writeMemAux rw m v); smt_pat (live_list l m)]
 let rec live_list_after_write_lemma rw v l m = match l with
   | []     -> ()
   | hd::tl -> live_list_after_write_lemma rw v tl m
@@ -142,7 +142,7 @@ val live_list_after_ralloc_lemma: #a:Type -> r:(lref a) -> v:a -> l:list (locate
                             -> m:smem{isNonEmpty (st m) /\ not (contains (topRegion m) r) /\ live_list l m}
                             -> Lemma (requires (True))
                                      (ensures (live_list l (allocateInTopR r v m)))
-                               [SMTPat (allocateInTopR r v m); SMTPat (live_list l m)]
+                               [smt_pat (allocateInTopR r v m); smt_pat (live_list l m)]
 let rec live_list_after_ralloc_lemma r v l m = match l with
   | []     -> ()
   | hd::tl -> live_list_after_ralloc_lemma r v tl m
@@ -261,7 +261,7 @@ val live_hist_arr_after_write_lemma: #a:Type -> rw:(lref a) -> v:a
                            -> m':smem{m' = writeMemAux rw m v}
                            -> Lemma (requires (True))
                               (ensures (liveArr m' h /\ i <= glength h m' /\ live_histogram_arr h m' i))
-                              [SMTPat (live_histogram_arr h m i); SMTPat (live_histogram_arr h m' i); SMTPat (writeMemAux rw m v)]
+                              [smt_pat (live_histogram_arr h m i); smt_pat (live_histogram_arr h m' i); smt_pat (writeMemAux rw m v)]
 let live_hist_arr_after_write_lemma rw v h i m m' = admit ()
 
 val live_hist_arr_after_ralloc_lemma: #a:Type -> r:(lref a) -> v:a -> h:histogram{reveal (asRef h) =!= r} -> i:nat
@@ -270,7 +270,7 @@ val live_hist_arr_after_ralloc_lemma: #a:Type -> r:(lref a) -> v:a -> h:histogra
                             -> m':smem{m' = allocateInTopR r v m}
                             -> Lemma (requires (True))
                                (ensures (liveArr m' h /\ i <= glength h m' /\ live_histogram_arr h m' i))
-                               [SMTPat (live_histogram_arr h m i); SMTPat (live_histogram_arr h m' i); SMTPat (allocateInTopR r v m)]
+                               [smt_pat (live_histogram_arr h m i); smt_pat (live_histogram_arr h m' i); smt_pat (allocateInTopR r v m)]
 let live_hist_arr_after_ralloc_lemma r v h i m m' = admit ()
 
 val live_histogram: h:histogram -> sm:smem -> GTot (r:bool{r ==> (liveArr sm h /\
@@ -284,7 +284,7 @@ val live_hist_after_write_lemma: #a:Type -> rw:(lref a) -> v:a
                            -> m':smem{m' = writeMemAux rw m v}
                            -> Lemma (requires (True))
                               (ensures (live_histogram h m'))
-                              [SMTPat (live_histogram h m); SMTPat (live_histogram h m'); SMTPat (writeMemAux rw m v)]                              
+                              [smt_pat (live_histogram h m); smt_pat (live_histogram h m'); smt_pat (writeMemAux rw m v)]                              
 let live_hist_after_write_lemma rw v h m m' = ()
 
 val live_hist_after_ralloc_lemma: #a:Type -> r:(lref a) -> v:a -> h:histogram{reveal (asRef h) =!= r}
@@ -293,7 +293,7 @@ val live_hist_after_ralloc_lemma: #a:Type -> r:(lref a) -> v:a -> h:histogram{re
                             -> m':smem{m' = allocateInTopR r v m}
                             -> Lemma (requires (True))
                                (ensures (live_histogram h m'))
-                               [SMTPat (live_histogram h m); SMTPat (live_histogram h m'); SMTPat (allocateInTopR r v m)]
+                               [smt_pat (live_histogram h m); smt_pat (live_histogram h m'); smt_pat (allocateInTopR r v m)]
 let live_hist_after_ralloc_lemma r v h m m' = ()
 
 val compute_histogram: d:data -> h:histogram -> i:nat

@@ -29,7 +29,7 @@ abstract type m_rref (r:rid) (a:Type) (b:reln a) = x:HS.ref a{x.id = r}
 (* let haseq_m_rref (r:rid) (a:Type) (b:reln a)  *)
 (*     : Lemma (requires True) *)
 (* 	    (ensures (hasEq (m_rref r a b))) *)
-(* 	    [SMTPat (hasEq (m_rref r a b))] *)
+(* 	    [smt_pat (hasEq (m_rref r a b))] *)
 (*     = () *)
 
 (* val as_rref: #r:rid -> #a:Type -> #b:reln a -> m_rref r a b -> GTot (rref r a) *)

@@ -38,10 +38,10 @@ assume HasEq_rid: hasEq rid //TODO: we just proved this above, but we need to ex
 
 abstract let root : rid = []
 
-//is this SMTPat bad ?
+//is this smt_pat bad ?
 val lemma_root_has_color_zero: r:rid{r = root}
                                -> Lemma (requires (True)) (ensures (color r = 0))
-                                 [SMTPat (color r)]
+                                 [smt_pat (color r)]
 let lemma_root_has_color_zero r = ()
 
 //expose this so that no-one should assume otheriwse
@@ -52,7 +52,7 @@ abstract type rref (id:rid) (a:Type) = Heap.ref a
 (* let has_eq_rref (id:rid) (a:Type) : *)
 (*   Lemma (requires True) *)
 (*         (ensures hasEq (rref id a)) *)
-(* 	[SMTPat (hasEq (rref id a))] *)
+(* 	[smt_pat (hasEq (rref id a))] *)
 (*   = ()	 *)
 
 abstract val as_ref : #a:Type -> #id:rid -> r:rref id a -> Tot (ref a)
@@ -70,7 +70,7 @@ let ref_as_rref i r = r
 val lemma_as_ref_inj: #a:Type -> #i:rid -> r:rref i a
     -> Lemma (requires (True))
              (ensures ((ref_as_rref i (as_ref r) == r)))
-       [SMTPat (as_ref r)]
+       [smt_pat (as_ref r)]
 let lemma_as_ref_inj #a #i r = ()
 
 abstract val includes : rid -> rid -> GTot bool
@@ -97,8 +97,8 @@ abstract val lemma_disjoint_includes: i:rid -> j:rid -> k:rid ->
   Lemma (requires (disjoint i j /\ includes j k))
         (ensures (disjoint i k))
         (decreases (List.Tot.length (reveal k)))
-        [SMTPat (disjoint i j);
-         SMTPat (includes j k)]
+        [smt_pat (disjoint i j);
+         smt_pat (includes j k)]
 let rec lemma_disjoint_includes i j k =
   if List.Tot.length k <= List.Tot.length j
   then ()
@@ -118,19 +118,19 @@ let parent r = Cons?.tl r
 abstract val lemma_includes_refl: i:rid
                       -> Lemma (requires (True))
                                (ensures (includes i i))
-                               [SMTPat (includes i i)]
+                               [smt_pat (includes i i)]
 let lemma_includes_refl i = ()
 
 abstract val lemma_extends_includes: i:rid -> j:rid ->
   Lemma (requires (extends j i))
         (ensures (includes i j /\ not(includes j i)))
-        [SMTPat (extends j i)]
+        [smt_pat (extends j i)]
 let lemma_extends_includes i j = ()
 
 let lemma_includes_anti_symmetric (i:rid) (j:rid) :
   Lemma (requires (includes i j /\ i <> j))
         (ensures (not (includes j i)))
-	[SMTPat (includes i j)]
+	[smt_pat (includes i j)]
   = ()
   
 abstract val lemma_extends_disjoint: i:rid -> j:rid -> k:rid ->
@@ -141,19 +141,19 @@ let lemma_extends_disjoint i j k = ()
 abstract val lemma_extends_parent: i:rid{i<>root} -> 
   Lemma (requires True)
         (ensures (extends i (parent i)))
-        [SMTPat (parent i)]
+        [smt_pat (parent i)]
 let lemma_extends_parent i = ()
 
 abstract val lemma_extends_not_root: i:rid -> j:rid{extends j i} -> 
   Lemma (requires True)
         (ensures (j<>root))
-        [SMTPat (extends j i)]
+        [smt_pat (extends j i)]
 let lemma_extends_not_root i j = ()
 
 abstract val lemma_extends_only_parent: i:rid -> j:rid{extends j i} -> 
   Lemma (requires True)
         (ensures (i = parent j))
-        [SMTPat (extends j i)]
+        [smt_pat (extends j i)]
 let lemma_extends_only_parent i j = ()
 
 private let test0 = assert (includes [(0, 1) ; (1, 0)] [(2, 2); (0, 1); (1, 0)])
@@ -204,8 +204,8 @@ let lemma_modifies_trans m1 m2 m3 s1 s2 = ()
 abstract val lemma_includes_trans: i:rid -> j:rid -> k:rid
                         -> Lemma (requires (includes i j /\ includes j k))
                                  (ensures (includes i k))
-                                 [SMTPat (includes i j);
-                                  SMTPat (includes j k)]
+                                 [smt_pat (includes i j);
+                                  smt_pat (includes j k)]
 let rec lemma_includes_trans i j k = 
   if j=k then ()
   else match k with 
@@ -231,7 +231,7 @@ let lemma_modifies_includes2 m1 m2 s1 s2 = ()
 abstract val lemma_disjoint_parents: pr:rid -> r:rid -> ps:rid -> s:rid -> Lemma
   (requires (extends r pr /\ extends s ps /\ disjoint pr ps))
   (ensures (disjoint r s))
-  [SMTPat (extends r pr); SMTPat (extends s ps); SMTPat (disjoint pr ps)]
+  [smt_pat (extends r pr); smt_pat (extends s ps); smt_pat (disjoint pr ps)]
 let lemma_disjoint_parents pr r ps s = ()
 
 (* AR: using excluded_middle here, could make it GTot Type0 instead ? *)
@@ -277,10 +277,10 @@ abstract val lemma_extends_fresh_disjoint: i:rid -> j:rid -> ipar:rid -> jpar:ri
                   /\ extends j jpar
                   /\ i<>j))
         (ensures (disjoint i j))
-        [SMTPatT (fresh_region i m0 m1);
-         SMTPatT (fresh_region j m0 m1);
-         SMTPat (extends i ipar);
-         SMTPat (extends j jpar)]         
+        [smt_pat (fresh_region i m0 m1);
+         smt_pat (fresh_region j m0 m1);
+         smt_pat (extends i ipar);
+         smt_pat (extends j jpar)]         
 let lemma_extends_fresh_disjoint i j ipar jpar m0 m1 = ()      
 
 let disjoint_regions (s1:Set.set rid) (s2:Set.set rid) = 
@@ -289,17 +289,17 @@ let disjoint_regions (s1:Set.set rid) (s2:Set.set rid) =
 let extends_parent (tip:rid{tip<>root}) (r:rid)
   : Lemma (requires True)
 	  (extends r (parent tip) /\ r<>tip ==> disjoint r tip \/ extends r tip)
-	  [SMTPat (extends r (parent tip))]
+	  [smt_pat (extends r (parent tip))]
   = ()
 
 let includes_child (tip:rid{tip<>root}) (r:rid)
   : Lemma (requires True)
 	  (includes r tip ==> r=tip \/ includes r (parent tip))
-	  [SMTPat (includes r (parent tip))]
+	  [smt_pat (includes r (parent tip))]
   = ()
 
 let root_is_root (s:rid)
   : Lemma (requires (includes s root))
 	  (ensures (s = root))
-	  [SMTPat (includes s root)]
+	  [smt_pat (includes s root)]
   = ()	  

@@ -27,21 +27,21 @@ val pow2_8_lemma: n:nat ->
   Lemma
     (requires (n = 8))
     (ensures  (pow2 n = 256))
-    [SMTPat (pow2 n)]
+    [smt_pat (pow2 n)]
 let pow2_8_lemma n = assert_norm(pow2 8 = 256)
 
 val pow2_32_lemma: n:nat ->
   Lemma
     (requires (n = 32))
     (ensures  (pow2 n = 4294967296))
-    [SMTPat (pow2 n)]
+    [smt_pat (pow2 n)]
 let pow2_32_lemma n = assert_norm(pow2 32 = 4294967296)
 
 val pow2_64_lemma: n:nat ->
   Lemma
     (requires (n = 64))
     (ensures  (pow2 n = 18446744073709551616))
-    [SMTPat (pow2 n)]
+    [smt_pat (pow2 n)]
 let pow2_64_lemma n = assert_norm(pow2 64 = 18446744073709551616)
 
 #set-options "--initial_fuel 0 --max_fuel 0 --z3rlimit 5"

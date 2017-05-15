@@ -77,7 +77,7 @@ assume val lemma_to_seq_is_injective: #a:sized_type -> h:mem -> b:buffer a -> h'
   Lemma
   (requires (True))
   (ensures ((to_seq h b == to_seq h' b') <==> Buffer.equal h b h' b'))
-  [SMTPat (to_seq h b); SMTPat (to_seq h' b')]
+  [smt_pat (to_seq h b); smt_pat (to_seq h' b')]
 
 (* Buffers also have (fixed) size. 8 as I consider these are 64bit pointers *)
 assume HasSizeBuffer: forall (a:sized_type). hasSize (buffer a)

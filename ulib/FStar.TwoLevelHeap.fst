@@ -43,7 +43,7 @@ let ref_as_rref #a i r = r
 val lemma_as_ref_inj: #a:Type -> #i:rid -> r:rref i a
     -> Lemma (requires (True))
              (ensures ((ref_as_rref i (as_ref r) == r)))
-       [SMTPat (as_ref r)]
+       [smt_pat (as_ref r)]
 let lemma_as_ref_inj #a #i r = ()
 
 assume val new_region: unit -> ST rid

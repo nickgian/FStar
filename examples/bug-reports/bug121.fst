@@ -47,14 +47,14 @@ and sub_lam s y : Tot (e:exp{renaming s ==> EVar? e}) =
 (* Substitution extensional; trivial with the extensionality axiom *)
 val subst_extensional: s1:sub -> s2:sub{feq s1 s2} -> e:exp ->
                         Lemma (requires True) (ensures (subst s1 e = subst s2 e))
-                       (* [SMTPat (subst s1 e);  SMTPat (subst s2 e)] *)
+                       (* [smt_pat (subst s1 e);  smt_pat (subst s2 e)] *)
 let subst_extensional s1 s2 e = ()
 
 (* This only works automatically with the patterns in
    subst_extensional above; it would be a lot cooler if this worked
    without, since that increases checking time.  Even worse, there is
-   no way to prove this without the SMTPat (e.g. manually), or to use
-   the SMTPat only locally, in this definition (`using` needed). *)
+   no way to prove this without the smt_pat (e.g. manually), or to use
+   the smt_pat only locally, in this definition (`using` needed). *)
 val sub_lam_hoist : e:exp -> s:sub -> Lemma (requires True)
       (ensures (subst s (ELam e) = ELam (subst (sub_lam s) e)))
 let sub_lam_hoist e s = ()

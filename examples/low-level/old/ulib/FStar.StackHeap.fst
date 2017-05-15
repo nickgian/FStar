@@ -34,7 +34,7 @@ let ref_as_rref i r = r
 val lemma_as_ref_inj: #a:Type -> #i:rid -> r:rref i a
     -> Lemma (requires (True))
              (ensures ((ref_as_rref i (as_ref r) = r)))
-       [SMTPat (as_ref r)]
+       [smt_pat (as_ref r)]
 let lemma_as_ref_inj #a #i r = ()
 
 (* Returns the stack of region ids *)
@@ -136,7 +136,7 @@ let asRef #a r = as_ref (refOf r)
 assume val stacked_to_ref_lemma_1: #a:Type -> x:stacked a -> y:stacked a -> Lemma
   (requires (x <> y))
   (ensures (asRef x <> asRef y))
-  [SMTPat (x <> y)]
+  [smt_pat (x <> y)]
 
 assume val stacked_to_ref_lemma_2: #a:Type -> x:stacked a -> y:stacked a -> Lemma
   (requires (x <> y))

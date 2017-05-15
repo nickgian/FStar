@@ -29,7 +29,7 @@ val older_than_transitive : ts0:timestamp ->
 			    ts2:timestamp ->
                             Lemma (requires (older_than ts0 ts1 /\ older_than ts1 ts2))
 			          (ensures  (older_than ts0 ts2))
-		            [SMTPat (older_than ts0 ts1); SMTPat (older_than ts1 ts2)]
+		            [smt_pat (older_than ts0 ts1); smt_pat (older_than ts1 ts2)]
 let older_than_transitive ts0 ts1 ts2 = ()
 
 
@@ -37,7 +37,7 @@ val older_than_antisymmetric : ts0:timestamp ->
                                ts1:timestamp ->
 	                       Lemma (requires (~(older_than ts0 ts1) /\ ~(older_than ts1 ts0)))
 	                             (ensures  (ts0 == ts1))
-			       [SMTPat (~(older_than ts0 ts1)); SMTPat (~(older_than ts1 ts0))]
+			       [smt_pat (~(older_than ts0 ts1)); smt_pat (~(older_than ts1 ts0))]
 let older_than_antisymmetric ts0 ts1 = ()
 
 

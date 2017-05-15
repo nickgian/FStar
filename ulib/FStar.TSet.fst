@@ -46,37 +46,37 @@ type subset (#a:Type) (s1:set a) (s2:set a) :Type0 = forall x. mem x s1 ==> mem 
 abstract val mem_empty: #a:Type -> x:a -> Lemma
    (requires True)
    (ensures (~ (mem x empty)))
-   [SMTPat (mem x empty)]
+   [smt_pat (mem x empty)]
 
 abstract val mem_singleton: #a:Type -> x:a -> y:a -> Lemma
    (requires True)
    (ensures (mem y (singleton x) <==> (x==y)))
-   [SMTPat (mem y (singleton x))]
+   [smt_pat (mem y (singleton x))]
 
 abstract val mem_union: #a:Type -> x:a -> s1:set a -> s2:set a -> Lemma
    (requires True)
    (ensures (mem x (union s1 s2) == (mem x s1 \/ mem x s2)))
-   [SMTPat (mem x (union s1 s2))]
+   [smt_pat (mem x (union s1 s2))]
 
 abstract val mem_intersect: #a:Type -> x:a -> s1:set a -> s2:set a -> Lemma
    (requires True)
    (ensures (mem x (intersect s1 s2) == (mem x s1 /\ mem x s2)))
-   [SMTPat (mem x (intersect s1 s2))]
+   [smt_pat (mem x (intersect s1 s2))]
 
 abstract val mem_complement: #a:Type -> x:a -> s:set a -> Lemma
    (requires True)
    (ensures (mem x (complement s) == ~(mem x s)))
-   [SMTPat (mem x (complement s))]
+   [smt_pat (mem x (complement s))]
 
 abstract val mem_subset: #a:Type -> s1:set a -> s2:set a -> Lemma
    (requires (forall x. mem x s1 ==> mem x s2))
    (ensures (subset s1 s2))
-   [SMTPat (subset s1 s2)]
+   [smt_pat (subset s1 s2)]
 
 abstract val subset_mem: #a:Type -> s1:set a -> s2:set a -> Lemma
    (requires (subset s1 s2))
    (ensures (forall x. mem x s1 ==> mem x s2))
-   [SMTPat (subset s1 s2)]
+   [smt_pat (subset s1 s2)]
 
 let mem_empty      #a x       = ()
 let mem_singleton  #a x y     = ()
@@ -91,17 +91,17 @@ let mem_subset     #a s1 s2   = ()
 abstract val lemma_equal_intro: #a:Type -> s1:set a -> s2:set a -> Lemma
     (requires  (forall x. mem x s1 <==> mem x s2))
     (ensures (equal s1 s2))
-    [SMTPatT (equal s1 s2)]
+    [smt_pat (equal s1 s2)]
 
 abstract val lemma_equal_elim: #a:Type -> s1:set a -> s2:set a -> Lemma
     (requires (equal s1 s2))
     (ensures  (s1 == s2))
-    [SMTPatT (equal s1 s2)]
+    [smt_pat (equal s1 s2)]
 
 abstract val lemma_equal_refl: #a:Type -> s1:set a -> s2:set a -> Lemma
     (requires (s1 == s2))
     (ensures  (equal s1 s2))
-    [SMTPatT (equal s1 s2)]
+    [smt_pat (equal s1 s2)]
 
 let lemma_equal_intro #a s1 s2 = ()
 let lemma_equal_elim  #a s1 s2 = PredicateExtensionality.predicateExtensionality a s1 s2
@@ -134,5 +134,5 @@ private let lemma_mem_tset_of_set_r (#a:eqtype) (s:Set.set a) (x:a)
 let lemma_mem_tset_of_set (#a:eqtype) (s:Set.set a) (x:a)
   :Lemma (requires True)
          (ensures  (Set.mem x s <==> mem x (tset_of_set s)))
-	 [SMTPat (mem x (tset_of_set s))]
+	 [smt_pat (mem x (tset_of_set s))]
   = lemma_mem_tset_of_set_l #a s x; lemma_mem_tset_of_set_r #a s x

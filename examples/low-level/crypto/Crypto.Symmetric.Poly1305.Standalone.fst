@@ -148,7 +148,7 @@ let rec encode_bytes txt =
 val append_empty: #a:Type -> s1:Seq.seq a -> s2:Seq.seq a -> Lemma
   (requires (Seq.length s1 == 0))
   (ensures  (Seq.append s1 s2 == s2))
-  [SMTPat (Seq.append s1 s2); SMTPatT (Seq.length s1 == 0)]
+  [smt_pat (Seq.append s1 s2); smt_pat (Seq.length s1 == 0)]
 let append_empty #a s1 s2 =
   Seq.lemma_eq_intro (Seq.append s1 s2) s2
 
@@ -188,7 +188,7 @@ let append_as_seq h n m msg = ()
 val encode_bytes_empty: txt:Seq.seq UInt8.t -> Lemma
     (requires Seq.length txt == 0)
     (ensures  encode_bytes txt == Seq.createEmpty)
-    [SMTPat (encode_bytes txt); SMTPatT (Seq.length txt == 0)]
+    [smt_pat (encode_bytes txt); smt_pat (Seq.length txt == 0)]
 let encode_bytes_empty txt = ()
 
 val snoc_encode_bytes: s:Seq.seq UInt8.t -> w:word_16 -> Lemma
@@ -282,7 +282,7 @@ let rec poly1305_loop log msg acc r ctr =
 val div_aux: a:UInt32.t -> b:UInt32.t{w b <> 0} -> Lemma
   (requires True)
   (ensures FStar.UInt32(UInt.size (v a / v b) n))
-  [SMTPat (FStar.UInt32(UInt.size (v a / v b) n))]
+  [smt_pat (FStar.UInt32(UInt.size (v a / v b) n))]
 let div_aux a b = ()
 
 #reset-options "--z3rlimit 200 --initial_fuel 0 --max_fuel 0 --max_ifuel 0 --initial_ifuel 0"

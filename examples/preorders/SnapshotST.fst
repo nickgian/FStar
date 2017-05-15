@@ -29,7 +29,7 @@ val snapshot_rel_assoc : #state:Type ->
 			 s2:snapshot_state state ->
 			 Lemma (requires (snapshot_rel rel s0 s1 /\ snapshot_rel rel s1 s2))
 			       (ensures  (snapshot_rel rel s0 s2))
-			 [SMTPat (snapshot_rel rel s0 s1); SMTPat (snapshot_rel rel s1 s2)]
+			 [smt_pat (snapshot_rel rel s0 s1); smt_pat (snapshot_rel rel s1 s2)]
 let snapshot_rel_assoc #state rel s0 s1 s2 = 
   match snd s0 with
   | None -> 
@@ -68,7 +68,7 @@ val witnessing_predicate_stable : #state:Type ->
 		                  s1:snapshot_state state ->
 		                  Lemma (requires (witnessing_predicate #state #rel p s0 /\ snapshot_rel rel s0 s1))
 		                        (ensures  (witnessing_predicate #state #rel p s1))
-		                  [SMTPat (witnessing_predicate #state #rel p s0); SMTPat (snapshot_rel rel s0 s1)]
+		                  [smt_pat (witnessing_predicate #state #rel p s0); smt_pat (snapshot_rel rel s0 s1)]
 let witnessing_predicate_stable #state rel p s0 s1 = 
   match snd s0 with
   | None -> ()

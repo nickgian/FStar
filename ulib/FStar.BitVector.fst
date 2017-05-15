@@ -39,7 +39,7 @@ let rec lognot_vec #n a =
 val logand_vec_definition: #n:pos -> a:bv_t n -> b:bv_t n -> i:nat{i < n} ->
   Lemma (requires True)
         (ensures index (logand_vec #n a b) i = (index a i && index b i))
-	[SMTPat (index (logand_vec #n a b) i)]
+	[smt_pat (index (logand_vec #n a b) i)]
 let rec logand_vec_definition #n a b i =
   if i = 0 then ()
   else logand_vec_definition #(n - 1) (slice a 1 n) (slice b 1 n) (i - 1)
@@ -47,7 +47,7 @@ let rec logand_vec_definition #n a b i =
 val logxor_vec_definition: #n:pos -> a:bv_t n -> b:bv_t n -> i:nat{i < n} ->
   Lemma (requires True)
         (ensures index (logxor_vec #n a b) i = (index a i <> index b i))
-	[SMTPat (index (logxor_vec #n a b) i)]
+	[smt_pat (index (logxor_vec #n a b) i)]
 let rec logxor_vec_definition #n a b i =
   if i = 0 then ()
   else logxor_vec_definition #(n - 1) (slice a 1 n) (slice b 1 n) (i - 1)
@@ -55,7 +55,7 @@ let rec logxor_vec_definition #n a b i =
 val logor_vec_definition: #n:pos -> a:bv_t n -> b:bv_t n -> i:nat{i < n} ->
   Lemma (requires True)
         (ensures index (logor_vec #n a b) i = (index a i || index b i))
-	[SMTPat (index (logor_vec #n a b) i)]
+	[smt_pat (index (logor_vec #n a b) i)]
 let rec logor_vec_definition #n a b i =
   if i = 0 then ()
   else logor_vec_definition #(n - 1) (slice a 1 n) (slice b 1 n) (i - 1)
@@ -63,7 +63,7 @@ let rec logor_vec_definition #n a b i =
 val lognot_vec_definition: #n:pos -> a:bv_t n -> i:nat{i < n} ->
   Lemma (requires True)
         (ensures index (lognot_vec #n a) i = not (index a i))
-	[SMTPat (index (lognot_vec #n a) i)]
+	[smt_pat (index (lognot_vec #n a) i)]
 let rec lognot_vec_definition #n a i =
   if i = 0 then ()
   else lognot_vec_definition #(n - 1) (slice a 1 n) (i - 1)
@@ -90,23 +90,23 @@ let shift_right_vec #n a s =
 val shift_left_vec_lemma_1: #n:pos -> a:bv_t n -> s:nat -> i:nat{i < n && i >= n - s} ->
   Lemma (requires True)
         (ensures index (shift_left_vec #n a s) i = false)
-	[SMTPat (index (shift_left_vec #n a s) i)]
+	[smt_pat (index (shift_left_vec #n a s) i)]
 let shift_left_vec_lemma_1 #n a s i = ()
 
 val shift_left_vec_lemma_2: #n:pos -> a:bv_t n -> s:nat -> i:nat{i < n && i < n - s} ->
   Lemma (requires True)
         (ensures index (shift_left_vec #n a s) i = index a (i + s))
-	[SMTPat (index (shift_left_vec #n a s) i)]
+	[smt_pat (index (shift_left_vec #n a s) i)]
 let shift_left_vec_lemma_2 #n a s i = ()
 
 val shift_right_vec_lemma_1: #n:pos -> a:bv_t n -> s:nat -> i:nat{i < n && i < s} ->
   Lemma (requires True)
         (ensures index (shift_right_vec #n a s) i = false)
-	[SMTPat (index (shift_right_vec #n a s) i)]
+	[smt_pat (index (shift_right_vec #n a s) i)]
 let shift_right_vec_lemma_1 #n a s i = ()
 
 val shift_right_vec_lemma_2: #n:pos -> a:bv_t n -> s:nat -> i:nat{i < n && i >= s} ->
   Lemma (requires True)
         (ensures index (shift_right_vec #n a s) i = index a (i - s))
-	[SMTPat (index (shift_right_vec #n a s) i)]
+	[smt_pat (index (shift_right_vec #n a s) i)]
 let shift_right_vec_lemma_2 #n a s i = ()

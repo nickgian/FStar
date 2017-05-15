@@ -15,7 +15,7 @@ val append_inj_lemma: b1:message -> b2:message
                    -> c1:message -> c2:message
                    -> Lemma (requires (length b1==length c1 /\ b2t (Seq.eq (b1 @| b2) (c1 @| c2))))
                             (ensures (b2t (Seq.eq b1 c1) /\ b2t (Seq.eq b2 c2)))
-                            [SMTPat (b1 @| b2); SMTPat (c1 @| c2)] (* given to the SMT solver *)
+                            [smt_pat (b1 @| b2); smt_pat (c1 @| c2)] (* given to the SMT solver *)
 let append_inj_lemma b1 b2 c1 c2 =
   lemma_append_len_disj b1 b2 c1 c2;
   Classical.forall_intro #_ #(fun (x:(i:nat{i < length b1})) -> index b1 x == index c1 x) (lemma_append_inj_l b1 b2 c1 c2); //sadly, the 2nd implicit argument has to be provided explicitly
@@ -25,7 +25,7 @@ abstract val lemma_eq_intro: #a:Type -> s1:seq a -> s2:seq a -> Lemma
      (requires (Seq.length s1 = Seq.length s2
                /\ (forall (i:nat{i < Seq.length s1}).{:pattern (Seq.index s1 i); (Seq.index s2 i)} (Seq.index s1 i == Seq.index s2 i))))
      (ensures (Seq.equal s1 s2))
-     [SMTPatT (Seq.equal s1 s2)]
+     [smt_pat (Seq.equal s1 s2)]
 let lemma_eq_intro #a s1 s2 = ()
 
 (* ----- from strings to bytestring and back *)
@@ -88,19 +88,19 @@ val req_resp_distinct:
   s:string -> s':string16 -> t':string ->
   Lemma (requires True)
         (ensures (request s <> response s' t'))
-        [SMTPat (request s); SMTPat (response s' t')]
+        [smt_pat (request s); smt_pat (response s' t')]
 
 val req_components_corr:
   s0:string -> s1:string ->
   Lemma (requires (b2t (Seq.eq (request s0) (request s1))))
         (ensures  (s0==s1))
-        (*[SMTPat (request s0); SMTPat (request s1)]*)
+        (*[smt_pat (request s0); smt_pat (request s1)]*)
 
 val resp_components_corr:
   s0:string16 -> t0:string -> s1:string16 -> t1:string ->
   Lemma (requires (b2t (Seq.eq (response s0 t0) (response s1 t1))))
         (ensures  (s0==s1 /\ t0==t1))
-        [SMTPat (response s0 t0); SMTPat (response s1 t1)]
+        [smt_pat (response s0 t0); smt_pat (response s1 t1)]
 // END: FormatLemmas
 
 // BEGIN: FormatProofs

@@ -77,7 +77,7 @@ let append_nil_l l = ()
 
 val append_l_nil: l:list 'a ->
   Lemma (requires True)
-        (ensures (l@[] == l)) [SMTPat (l@[])]
+        (ensures (l@[] == l)) [smt_pat (l@[])]
 let rec append_l_nil = function
   | [] -> ()
   | hd::tl -> append_l_nil tl
@@ -103,7 +103,7 @@ let rec append_assoc l1 l2 l3 = match l1 with
 
 val append_length: l1:list 'a -> l2:list 'a ->
   Lemma (requires True)
-        (ensures (length (l1@l2) = length l1 + length l2)) [SMTPat (length (l1 @ l2))]
+        (ensures (length (l1@l2) = length l1 + length l2)) [smt_pat (length (l1 @ l2))]
 let rec append_length l1 l2 = match l1 with
   | [] -> ()
   | hd::tl -> append_length tl l2
@@ -113,7 +113,7 @@ val append_mem: #t:eqtype ->  l1:list t
               -> a:t
               -> Lemma (requires True)
                        (ensures (mem a (l1@l2) = (mem a l1 || mem a l2)))
-                       (* [SMTPat (mem a (l1@l2))] *)
+                       (* [smt_pat (mem a (l1@l2))] *)
 let rec append_mem #t l1 l2 a = match l1 with
   | [] -> ()
   | hd::tl -> append_mem tl l2 a
@@ -139,7 +139,7 @@ val append_count_forall: #a:eqtype ->  l1:list a
               -> l2:list a
               -> Lemma (requires True)
                        (ensures (forall a. count a (l1@l2) = (count a l1 + count a l2)))
-                       (* [SMTPat (l1@l2)] *)
+                       (* [smt_pat (l1@l2)] *)
 let rec append_count_forall #a l1 l2 = match l1 with
   | [] -> ()
   | hd::tl -> append_count_forall tl l2
@@ -246,7 +246,7 @@ val map_lemma: f:('a -> Tot 'b)
              -> l:(list 'a)
              -> Lemma (requires True)
                       (ensures (length (map f l)) = length l)
-                      [SMTPat (map f l)]
+                      [smt_pat (map f l)]
 let rec map_lemma f l =
     match l with
     | [] -> ()
@@ -304,7 +304,7 @@ val partition_count_forall: #a:eqtype -> f:(a -> Tot bool)
                   -> l:list a
                   -> Lemma (requires True)
                            (ensures (forall x. count x l = (count x (fst (partition f l)) + count x (snd (partition f l)))))
-                           (* [SMTPat (partitionT f l)] *)
+                           (* [smt_pat (partitionT f l)] *)
 let rec partition_count_forall #a f l= match l with
   | [] -> ()
   | hd::tl -> partition_count_forall f tl
@@ -355,7 +355,7 @@ val append_sorted: #a:eqtype
                                     /\ (forall y. mem y l1 ==> not(f pivot y))
                                     /\ (forall y. mem y l2 ==> f pivot y)))
                         (ensures (sorted f (l1@(pivot::l2))))
-                        [SMTPat (sorted f (l1@(pivot::l2)))]
+                        [smt_pat (sorted f (l1@(pivot::l2)))]
 let rec append_sorted #a f l1 l2 pivot = match l1 with
   | [] -> ()
   | hd::tl -> append_sorted f tl l2 pivot
@@ -382,7 +382,7 @@ let rec sortWith_sorted #a f l = match l with
 
 (** Correctness of [mem] for types with decidable equality. TODO:
 replace [mem] with [memP] in relevant lemmas and define the right
-SMTPat to automatically recover lemmas about [mem] for types with
+smt_pat to automatically recover lemmas about [mem] for types with
 decidable equality *)
 let rec mem_memP
   (#a: eqtype)
@@ -806,7 +806,7 @@ let rec precedes_append_cons_r
 : Lemma
   (requires True)
   (ensures (x << append l1 (x :: l2)))
-  [SMTPat (x << append l1 (x :: l2))]
+  [smt_pat (x << append l1 (x :: l2))]
 = match l1 with
   | [] -> ()
   | _ :: q -> precedes_append_cons_r q x l2
@@ -820,7 +820,7 @@ let precedes_append_cons_prod_r
 : Lemma
   (requires (l == append l1 ((x, y) :: l2)))
   (ensures (x << l /\ y << l))
-  [SMTPatOr [ [ SMTPatT (x << l); SMTPatT (l == append l1 ((x, y) :: l2))] ; [SMTPatT (y << l); SMTPatT (l == append l1 ((x, y) :: l2))] ] ]
+  [smt_pat_or [ [ smt_pat (x << l); smt_pat (l == append l1 ((x, y) :: l2))] ; [smt_pat (y << l); smt_pat (l == append l1 ((x, y) :: l2))] ] ]
 = precedes_append_cons_r l1 (x, y) l2
 
 let rec memP_precedes

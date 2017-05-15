@@ -308,7 +308,7 @@ let rec fpartial_result_lemma f x px (w:reachable f x px) : Lemma (requires True
 
 let fpartial_result_init_lemma f x
   : Lemma (requires True) (ensures (fpartial_result x f (f x)))
-    [SMTPat (fpartial_result x f (f x))]
+    [smt_pat (fpartial_result x f (f x))]
 = fpartial_result_lemma f x (f x) Now
 
 (* Memoization of a recursive functions represented as [f : x:dom -> partial_result x] with a complete spec *)

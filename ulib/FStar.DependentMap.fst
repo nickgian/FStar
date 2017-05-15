@@ -29,7 +29,7 @@ abstract let sel_create
 : Lemma
   (requires True)
   (ensures (sel #key #value (create f) k == f k))
-  [SMTPat (sel (create f) k)]
+  [smt_pat (sel (create f) k)]
 = ()
 
 abstract let upd
@@ -52,7 +52,7 @@ abstract let sel_upd_same
 : Lemma
   (requires True)
   (ensures (sel (upd m k v) k == v))
-  [SMTPat (sel (upd m k v) k)]
+  [smt_pat (sel (upd m k v) k)]
 = ()
 
 abstract let sel_upd_other
@@ -65,7 +65,7 @@ abstract let sel_upd_other
 : Lemma
   (requires (k' <> k))
   (ensures (sel (upd m k v) k' == sel m k'))
-  [SMTPat (sel (upd m k v) k')]
+  [smt_pat (sel (upd m k v) k')]
 = ()
 
 abstract let equal

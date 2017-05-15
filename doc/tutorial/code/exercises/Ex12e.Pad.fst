@@ -29,7 +29,7 @@ let encode a = append a (pad (blocksize - length a))
 
 val inj: a: text -> b: text -> Lemma (requires (True (*complete lemma here*)))
                                      (ensures (True (*and here*)))
-				     [SMTPat (encode a); SMTPat (encode b)]
+				     [smt_pat (encode a); smt_pat (encode b)]
 let inj a b = ()
 
 

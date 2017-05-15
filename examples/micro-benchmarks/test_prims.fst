@@ -182,9 +182,9 @@ type list (a:Type) =
   | Cons : hd:a -> tl:list a -> list a
 
 type pattern =
-  | SMTPat   : #a:Type -> a -> pattern
-  | SMTPatT  : a:Type -> pattern
-//  | SMTPatOr : list (list pattern) -> pattern //TODO: rechecking this fails some universe checks
+  | smt_pat   : #a:Type -> a -> pattern
+  | smt_pat  : a:Type -> pattern
+//  | smt_pat_or : list (list pattern) -> pattern //TODO: rechecking this fails some universe checks
 
 assume type decreases : #a:Type -> a -> Type0
 

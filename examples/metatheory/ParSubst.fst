@@ -103,7 +103,7 @@ let subst_eabs s y =
 
 val subst_extensional: e:exp -> s1:sub -> s2:sub{feq s1 s2} ->
                Lemma (requires True) (ensures (subst e s1 = subst e s2))
-                     [SMTPat (subst e s1);  SMTPat (subst e s2)]
+                     [smt_pat (subst e s1);  smt_pat (subst e s2)]
 let subst_extensional e s1 s2 = ()
 
 let test_hoist (t:ty) (e:exp) (s:sub) =

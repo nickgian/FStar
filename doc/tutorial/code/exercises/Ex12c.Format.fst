@@ -29,7 +29,7 @@ val append_inj_lemma: b1:message -> b2:message
                    -> Lemma (requires (length b1==length c1 /\ append b1 b2==append c1 c2))
                             (ensures (Equal b1 c1 /\ Equal b2 c2))
                             (decreases (length b1))
-                            [SMTPat (append b1 b2); SMTPat (append c1 c2)] 
+                            [smt_pat (append b1 b2); smt_pat (append c1 c2)] 
 
 let rec append_inj_lemma b1 b2 c1 c2 =
   let l = length b1 in 

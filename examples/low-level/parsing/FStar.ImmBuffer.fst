@@ -14,7 +14,7 @@ assume MaxUInt32: pow2 32 = 4294967296
 
 let lemma_size (x:int) : Lemma (requires (UInt.size x n))
 				     (ensures (x >= 0))
-				     [SMTPat (UInt.size x n)]
+				     [smt_pat (UInt.size x n)]
   = ()
 
 (* TODO: leaving sequences bounded for the moment *)
@@ -157,12 +157,12 @@ let to_seq (#t:sizeof_t) (#ty:serializable t) (b:buffer ty) : Tot (s:seq t) =
 assume val lemma_as_seq_length: #t:sizeof_t -> #ty:serializable t -> b:buffer ty -> Lemma
   (requires (True))
   (ensures  (Seq.length (to_seq #t #ty b) = length b))
-  [SMTPat ((to_seq #t #ty b))]
+  [smt_pat ((to_seq #t #ty b))]
 
 assume val lemma_as_seq_inj: #t:sizeof_t -> #ty:serializable t -> b:buffer ty -> b':buffer ty -> Lemma
   (requires (to_seq #t #ty b == to_seq #t #ty b'))
   (ensures  (equal_bytes b b'))
-  (* [SMTPat (equal_bytes b b')] *)
+  (* [smt_pat (equal_bytes b b')] *)
 
 (* All those functions are functionaly expressed in terms of 'to_seq', which hide the 
    concrete type layout *)

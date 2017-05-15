@@ -92,7 +92,7 @@ val contains_lemma : #a:Type ->
 		     r:FStar.Heap.ref a -> 
 		     Lemma (requires (contains r h)) 
 		           (ensures  (FStar.Heap.contains h r))
-		     [SMTPat (contains r h)]
+		     [smt_pat (contains r h)]
 let contains_lemma #a h r = ()
 
 

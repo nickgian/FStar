@@ -267,7 +267,7 @@ function. *)
 val mem_filter_forall (#a: eqtype) (f: (a -> Tot bool)) (l: list a) : Lemma
   (requires True)
   (ensures (forall x . mem #a x (filter f l) ==> f x))
-  [SMTPat (filter f l)]
+  [smt_pat (filter f l)]
 let mem_filter_forall #a f l = FStar.Classical.ghost_lemma (mem_filter f l)
 
 (** [for_all f l] returns [true] if, and only if, for all elements [x]

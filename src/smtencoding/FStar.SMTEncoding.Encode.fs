@@ -1021,7 +1021,6 @@ and encode_function_type_as_formula (induction_on:option<term>) (new_pats:option
         let head, args = U.unmeta p |> U.head_and_args in
         match (U.un_uinst head).n, args with
         | Tm_fvar fv, [(_, _); (e, _)] when S.fv_eq_lid fv Const.smtpat_lid -> (e, None)
-        | Tm_fvar fv, [(e, _)] when S.fv_eq_lid fv Const.smtpatT_lid -> (e, None)
         | _ -> failwith "Unexpected pattern term"  in
 
     let lemma_pats p =

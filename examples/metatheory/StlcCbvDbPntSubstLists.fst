@@ -57,7 +57,7 @@ let rec substitute e j e' = match e with
 
 val subst_zero_lem: e1:exp -> e2:exp{not (free_zero e2)} ->
                     Lemma (requires True)
-                          (ensures (not (free_zero (substitute e1 0 e2)))) (decreases e1) [SMTPat (substitute e1 0 e2)]
+                          (ensures (not (free_zero (substitute e1 0 e2)))) (decreases e1) [smt_pat (substitute e1 0 e2)]
 let rec subst_zero_lem e1 e2 = match e1 with
   | EVar k       -> ()
   | EAbs _ _     -> ()
@@ -126,7 +126,7 @@ val list_assoc_b: g:env -> g':env -> t1':typ -> t:typ -> Lemma (requires True) (
 let list_assoc_b g g' t1' t = ()
 
 (* inversion for lookup, lookup for indices less than length of env succeeds *)
-val lookup_inv: g:env -> n:nat -> Lemma (requires True) (ensures (if n < len g then Some? (lookup g n) else None? (lookup g n))) [SMTPat (lookup g n)]
+val lookup_inv: g:env -> n:nat -> Lemma (requires True) (ensures (if n < len g then Some? (lookup g n) else None? (lookup g n))) [smt_pat (lookup g n)]
 let rec lookup_inv g n = match g with
   | []    -> ()
   | _::tl -> if n = 0 then () else lookup_inv tl (n - 1)
@@ -134,7 +134,7 @@ let rec lookup_inv g n = match g with
 (* inversion for lookup in app, lookup in g' @ g means either lookup in g' or in g *)
 val lookup_app_inv: g:env -> g':env -> k:nat{Some? (lookup (g' @ g) k)} -> Lemma (requires (True))
                    (ensures ((k < len g' /\ lookup (g' @ g) k = lookup g' k) \/ (k >= len g' /\ lookup (g' @ g) k = lookup g (k - len g'))))
-                   [SMTPat (lookup (g' @ g) k)]
+                   [smt_pat (lookup (g' @ g) k)]
 let rec lookup_app_inv g g' k = match g' with
   | []     -> ()
   | hd::tl -> if k = 0 then () else lookup_app_inv g tl (k - 1)

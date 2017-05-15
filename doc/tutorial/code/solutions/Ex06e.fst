@@ -20,7 +20,7 @@ val sorted_smaller: x:int
                 ->  l:list int
                 ->  Lemma (requires (sorted (x::l) /\ mem y l))
                           (ensures (x <= y))
-                          [SMTPat (sorted (x::l)); SMTPat (mem y l)]
+                          [smt_pat (sorted (x::l)); smt_pat (mem y l)]
 let rec sorted_smaller x y l = match l with
     | [] -> ()
     | z::zs -> if z=y then () else sorted_smaller x y zs

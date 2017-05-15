@@ -266,7 +266,7 @@ val max_limb_lemma: a:nat -> b:nat ->
   Lemma
     (requires (a < pow2 max_limb /\ b < pow2 max_limb))
     (ensures (a * b < pow2 platform_wide))
-    [SMTPat (a * b)]
+    [smt_pat (a * b)]
 let max_limb_lemma a b =
   (* FproductLemmas.ineq_lemma_3 a b (pow2 max_limb); *)
   Math.Lemmas.pow2_plus max_limb max_limb;
@@ -722,7 +722,7 @@ let multiplication_step_lemma_03 h0 h1 a b ctr c =
 val helper_lemma_7: ctr:pos{ctr < norm_length} -> Lemma 
     (requires (True))
     (ensures (norm_length - ctr + 1 >= 0 /\ norm_length - ctr + 1 <= norm_length))
-    [SMTPat (norm_length - ctr + 1)]
+    [smt_pat (norm_length - ctr + 1)]
 let helper_lemma_7 ctr = ()
   (* FproductLemmas.helper_lemma_7 norm_length ctr *)
 

@@ -162,7 +162,7 @@ let rec progress #e #t h =
 val subst_extensional: s1:sub -> s2:sub{feq s1 s2} -> e:exp ->
                        Lemma (requires True)
                              (ensures (subst s1 e = subst s2 e))
-                             [SMTPat (subst s1 e); SMTPat (subst s2 e)]
+                             [smt_pat (subst s1 e); smt_pat (subst s2 e)]
 let subst_extensional s1 s2 e = ()
 
 (* Typing of substitutions (very easy, actually) *)

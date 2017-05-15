@@ -92,13 +92,13 @@ abstract let contains (#a:Type) (h:heap) (r:ref a): Tot Type0 = Some? (h.memory 
 val contains_a_well_typed_implies_contains: #a:Type -> h:heap -> r:ref a
                               -> Lemma (requires (h `contains_a_well_typed` r))
 			              (ensures  (h `contains` r))
-				[SMTPatOr [[SMTPat (h `contains_a_well_typed` r)]; [SMTPat (h `contains` r)]]]
+				[smt_pat_or [[smt_pat (h `contains_a_well_typed` r)]; [smt_pat (h `contains` r)]]]
 let contains_a_well_typed_implies_contains #a h r = ()
 
 val contains_addr_of: #a:Type -> #b:Type -> h:heap -> r1:ref a -> r2:ref b
                      -> Lemma (requires (h `contains` r1 /\ ~ (h `contains` r2)))
 		             (ensures  (addr_of r1 <> addr_of r2))
-		       [SMTPat (h `contains` r1); SMTPat (h `contains` r2)]
+		       [smt_pat (h `contains` r1); smt_pat (h `contains` r2)]
 let contains_addr_of #a #b h r1 r2 = ()
 
 let fresh (s:set nat) (h0:heap) (h1:heap) =
@@ -111,29 +111,29 @@ val alloc_lemma: #a:Type -> h0:heap -> x:a
                  -> Lemma (requires (True))
 		         (ensures (let r, h1 = alloc h0 x in
 			           h1 == upd h0 r x /\ ~ (h0 `contains` r) /\ h1 `contains_a_well_typed` r))
-		   [SMTPat (alloc h0 x)]
+		   [smt_pat (alloc h0 x)]
 let alloc_lemma #a h0 x = ()
 
 let sel_same_addr_of (#a:Type) (x:ref a) (y:ref a) (h:heap)
   :Lemma (requires (addr_of x = addr_of y /\ h `contains_a_well_typed` x /\ h `contains_a_well_typed` y))
          (ensures  (sel h x == sel h y))
-   [SMTPat (sel h x); SMTPat (sel h y)]
+   [smt_pat (sel h x); smt_pat (sel h y)]
   = ()
 
 val sel_upd1: #a:Type -> h:heap -> r:ref a -> v:a -> r':ref a
 	      -> Lemma (requires (addr_of r = addr_of r')) (ensures (sel (upd h r v) r' == v))
-                [SMTPat (sel (upd h r v) r')]
+                [smt_pat (sel (upd h r v) r')]
 let sel_upd1 #a h r v r' = ()
 
 val sel_upd2: #a:Type -> #b:Type -> h:heap -> k1:ref a -> k2:ref b -> v:b
               -> Lemma (requires True) (ensures (addr_of k1 <> addr_of k2 ==> sel (upd h k2 v) k1 == sel h k1))
-	        [SMTPat (sel (upd h k2 v) k1)]
+	        [smt_pat (sel (upd h k2 v) k1)]
 let sel_upd2 #a #b h k1 k2 v = ()
 
 val upd_sel : #a:Type -> h:heap -> r:ref a ->
 	      Lemma (requires (h `contains_a_well_typed` r))
 	            (ensures  (upd h r (sel h r) == h))
-	      [SMTPat (upd h r (sel h r))]
+	      [smt_pat (upd h r (sel h r))]
 let upd_sel #a h r =
   assert (FStar.FunctionalExtensionality.feq (upd h r (sel h r)).memory h.memory)
 
@@ -150,14 +150,14 @@ let emp = {
 
 val in_dom_emp: #a:Type -> k:ref a
                 -> Lemma (requires True) (ensures (~ (emp `contains` k)))
-		  [SMTPat (emp `contains` k)]
+		  [smt_pat (emp `contains` k)]
 let in_dom_emp #a k = ()
 
 val upd_contains: #a:Type -> #b:Type -> h:heap -> r:ref a -> v:a -> r':ref b
                   -> Lemma (requires True)
 		          (ensures ((upd h r v) `contains_a_well_typed`  r /\
 			            (h `contains` r' ==> (upd h r v) `contains` r')))
-		    [SMTPat ((upd h r v) `contains` r')]
+		    [smt_pat ((upd h r v) `contains` r')]
 let upd_contains #a #b h r v r' = ()
 
 val upd_contains_a_well_typed: #a:Type -> #b:Type -> h:heap -> r:ref a -> v:a -> r':ref b
@@ -165,7 +165,7 @@ val upd_contains_a_well_typed: #a:Type -> #b:Type -> h:heap -> r:ref a -> v:a ->
 		          (ensures ((upd h r v) `contains_a_well_typed` r /\
 			            (((h `contains_a_well_typed` r \/ ~ (h `contains` r)) /\ h `contains_a_well_typed` r')
 				     ==> (upd h r v) `contains_a_well_typed` r')))
-		    [SMTPat ((upd h r v) `contains_a_well_typed` r')]
+		    [smt_pat ((upd h r v) `contains_a_well_typed` r')]
 let upd_contains_a_well_typed #a #b h r v r' = ()
 
 let modifies (s:set nat) (h0:heap) (h1:heap) =
@@ -197,7 +197,7 @@ let lemma_modifies_trans m1 m2 m3 s1 s2 = ()
 
 (* val equal_extensional: h1:heap -> h2:heap *)
 (*                        -> Lemma (requires True) (ensures (equal h1 h2 <==> h1 == h2)) *)
-(* 		         [SMTPat (equal h1 h2)] *)
+(* 		         [smt_pat (equal h1 h2)] *)
 (* let equal_extensional h1 h2 = ()			  *)
 
 (* that sel_tot is same as sel and upd_tot is same as upd if h contains_a_well_typed r *)
@@ -205,14 +205,14 @@ val lemma_sel_tot_is_sel_if_contains_a_well_typed:
   #a:Type -> h:heap -> r:ref a{h `contains_a_well_typed` r}
   -> Lemma (requires True)
           (ensures  (sel_tot h r == sel h r))
-    [SMTPat (sel_tot h r)]
+    [smt_pat (sel_tot h r)]
 let lemma_sel_tot_is_sel_if_contains_a_well_typed #a h r = ()
 
 val lemma_upd_tot_is_upd_if_contains_a_well_typed:
   #a:Type -> h:heap -> r:ref a{h `contains_a_well_typed` r} -> x:a
   -> Lemma (requires True)
           (ensures  (upd h r x == upd_tot h r x))
-    [SMTPat (upd_tot h r x)]
+    [smt_pat (upd_tot h r x)]
 let lemma_upd_tot_is_upd_if_contains_a_well_typed #a h r x = ()
 
 val op_Hat_Plus_Plus: #a:Type -> r:ref a -> set nat -> Tot (set nat)

@@ -74,7 +74,7 @@ let vlb_length n b = read_length (sub b 0ul n) n
 val read_length_lemma: #n:csize -> b:vlbytes (v n) -> j:UInt32.t{v j <= length b /\ v j >= v n} -> 
   Lemma (requires True)
 	(ensures  (read_length (sub b 0ul j) n = read_length b n))
-	[SMTPat (read_length (sub b 0ul j) n)]
+	[smt_pat (read_length (sub b 0ul j) n)]
 let read_length_lemma #n b j = ()	
 
 (*** WIP ***)

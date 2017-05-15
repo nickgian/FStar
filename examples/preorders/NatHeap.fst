@@ -175,7 +175,7 @@ val contains_upd : h:heap ->
 		   r':ref b ->
 		   Lemma (requires (contains h r'))
 		         (ensures  (contains (upd h r x) r'))
-		   [SMTPat (contains (upd h r x) r')]  
+		   [smt_pat (contains (upd h r x) r')]  
 let contains_upd h a b r x r' = ()           
 
 
@@ -183,7 +183,7 @@ val contains_emp : a:Type ->
                    r:ref a -> 
 		   Lemma (requires (True))
 		         (ensures  (~(contains emp r)))
-		   [SMTPat (~(contains emp r))]
+		   [smt_pat (~(contains emp r))]
 let contains_emp a r = ()
 
 
@@ -195,7 +195,7 @@ val sel_upd1 : h:heap ->
 	       x:a -> 
 	       Lemma (requires (True))
 	             (ensures  (sel (upd h r x) r == x))
-	       [SMTPat (sel (upd h r x) r)]
+	       [smt_pat (sel (upd h r x) r)]
 let sel_upd1 h a r x = ()
 
 
@@ -207,7 +207,7 @@ val sel_upd2 : h:heap ->
 	       r':ref b{contains #b h r'} -> 
 	       Lemma (requires (~(r === r')))
 	             (ensures  (sel (upd h r x) r' == sel h r'))
-	       [SMTPat (sel (upd h r x) r')]
+	       [smt_pat (sel (upd h r x) r')]
 let sel_upd2 h a b r x r' = ()
 
 
@@ -216,7 +216,7 @@ val upd_sel : h:heap ->
 	      r:ref a{contains #a h r} -> 
 	      Lemma (requires (True))
 	            (ensures  (upd h r (sel h r) == h))
-	      [SMTPat (upd h r (sel h r))]
+	      [smt_pat (upd h r (sel h r))]
 let upd_sel h a r = 
   assert (FStar.FunctionalExtensionality.feq (snd (upd h r (sel h r))) (snd h))
 
@@ -229,7 +229,7 @@ val contains_concat1 : h0:heap ->
 		       r:ref a -> 
 		       Lemma (requires (contains h0 r))
                              (ensures  (contains (concat h0 h1) r))
-			     [SMTPat (contains (concat h0 h1) r)]
+			     [smt_pat (contains (concat h0 h1) r)]
 let contains_concat1 h0 h1 a r = 
   match snd h0 r with
   | Some v -> 
@@ -244,7 +244,7 @@ val contains_concat2 : h0:heap ->
 		       r:ref a -> 
 		       Lemma (requires (contains h1 r))
                              (ensures  (contains (concat h0 h1) r))
-		       [SMTPat (contains (concat h0 h1) r)]
+		       [smt_pat (contains (concat h0 h1) r)]
 let contains_concat2 h0 h1 a r = ()
 
 
@@ -254,7 +254,7 @@ val sel_concat1 : h0:heap ->
 		  r:ref a{contains h0 r /\ ~(contains h1 r)} -> 
 		  Lemma (requires (True))
 		        (ensures  (sel (concat h0 h1) r == sel h0 r))
-	          [SMTPat (sel (concat h0 h1) r)]
+	          [smt_pat (sel (concat h0 h1) r)]
 let sel_concat1 h0 h1 a r = 
   match snd h0 r with
   | Some v -> 
@@ -269,6 +269,6 @@ val sel_concat2 : h0:heap ->
 		  r:ref a{contains h1 r} -> 
 		  Lemma (requires (True))
 		        (ensures  (sel (concat h0 h1) r == sel h1 r))
-	          [SMTPat (sel (concat h0 h1) r)]
+	          [smt_pat (sel (concat h0 h1) r)]
 let sel_concat2 h0 h1 a r = ()
 

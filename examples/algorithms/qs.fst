@@ -20,7 +20,7 @@ val partition_lemma: f:('a -> Tot bool)
                                       /\ (forall x. mem x l = (mem x l1 || mem x l2))))
                                         (fst (partitionT f l))
                                         (snd (partitionT f l))))
-                           (* [SMTPat (partitionT f l)] (\* injected to the solver *\) *)
+                           (* [smt_pat (partitionT f l)] (\* injected to the solver *\) *)
 let rec partition_lemma f l = match l with 
   | [] -> ()
   | hd::tl -> partition_lemma f tl
@@ -40,7 +40,7 @@ val sorted_concat_lemma:  #a:Type
                                     /\ (forall y. mem y l1 ==> not(f pivot y))
                                     /\ (forall y. mem y l2 ==> f pivot y))
 )                         (ensures (sorted f (l1@(pivot::l2))))
-                          [SMTPat (sorted f (l1@(pivot::l2)))]
+                          [smt_pat (sorted f (l1@(pivot::l2)))]
 let rec sorted_concat_lemma f l1 l2 pivot = match l1 with 
   | [] -> ()
   | hd::tl -> sorted_concat_lemma f tl l2 pivot

@@ -49,20 +49,20 @@ let prime_modulo_lemma () = assert_norm (pow2 255 % (reveal prime) = 19)
 val modulo_lemma: a:nat -> b:pos -> Lemma
   (requires (a < b))
   (ensures (a % b = a))
-  [SMTPat (a % b)]
+  [smt_pat (a % b)]
 let modulo_lemma a b = () //Math.Lemmas.modulo_lemma a b
 
 val pow2_4_lemma: unit -> Lemma
   (requires True)
   (ensures (pow2 4 = 16))
-  [SMTPat (pow2 4)]
+  [smt_pat (pow2 4)]
 let pow2_4_lemma () =
   assert_norm (pow2 4 = 16)
 
 val pow2_5_lemma: unit -> Lemma
   (requires True)
   (ensures (pow2 5 = 32))
-  [SMTPat (pow2 5)]
+  [smt_pat (pow2 5)]
 let pow2_5_lemma () =
   assert_norm (pow2 5 = 32)
 
@@ -169,7 +169,7 @@ let rec pow2_bitweight_lemma_1 ctr =
 val bitweight_norm_length_lemma: unit ->
   Lemma (requires True)
 	(ensures (bitweight templ norm_length = 255))
-	[SMTPat (bitweight templ norm_length)]
+	[smt_pat (bitweight templ norm_length)]
 let bitweight_norm_length_lemma () = 
   assert_norm (bitweight templ norm_length = 255)
 

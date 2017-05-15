@@ -183,7 +183,7 @@ val lemma_mem_rid: #rs:set rid -> bs:bots rs -> b:bot
   -> Lemma (requires True)
           (ensures  (mem #rs b bs ==> Set.mem (Bot?.r b) rs))
 	  (decreases bs)
-          [SMTPat (mem #rs b bs)]
+          [smt_pat (mem #rs b bs)]
 let rec lemma_mem_rid #rs bs b =
   match bs with
   | Nil -> ()

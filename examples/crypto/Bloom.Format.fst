@@ -57,5 +57,5 @@ val signal_components_corr:
   s0:uint32 -> c0:uint16 -> s1:uint32 -> c1:uint16 ->
   Lemma (requires (Seq.Eq (signal s0 c0) (signal s1 c1)))
         (ensures  (s0 = s1 /\ c0 = c1))
-        [SMTPat (signal s0 c0); SMTPat (signal s1 c1)]
+        [smt_pat (signal s0 c0); smt_pat (signal s1 c1)]
 let signal_components_corr s0 c0 s1 c1 = ()

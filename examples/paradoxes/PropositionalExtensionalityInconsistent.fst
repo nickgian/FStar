@@ -31,7 +31,7 @@ open FStar.FunctionalExtensionality
 val predicateExtensionality : a:Type0 -> p1:predicate a -> p2:predicate a ->
   Lemma (requires True)
 	(ensures (peq #a p1 p2 <==> p1==p2))
-	(* [SMTPat (peq #a p1 p2)] *)
+	(* [smt_pat (peq #a p1 p2)] *)
 let predicateExtensionality (a:Type0) p1 p2 =
   propositionalExtensionality ();
   assert (feq #a #Type0 p1 p2 <==> p1==p2)

@@ -77,7 +77,7 @@ val lenthRotValue : unit ->
   Lemma
       (requires True)
       (ensures (List.length rotValues = 16))
-[SMTPat rotValues]
+[smt_pat rotValues]
 let lenthRotValue u = (admit ())
 
 

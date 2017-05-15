@@ -116,7 +116,7 @@ let log_cmp (a:log) (b:log) =
 val log_cmp_reflexive: (a:log) -> Lemma
   (requires True)
   (ensures (log_cmp a a))
-  [SMTPat (log_cmp a a)]
+  [smt_pat (log_cmp a a)]
 let log_cmp_reflexive a = ()
 
 val log_cmp_transitive: a:log -> b:log -> c:log -> Lemma

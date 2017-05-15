@@ -131,7 +131,7 @@ val lemma_big_endian_is_bounded: b:bytes -> Lemma
   (requires True)
   (ensures  (big_endian b < pow2 (8 * Seq.length b)))
   (decreases (Seq.length b))
-  [SMTPat (big_endian b)]
+  [smt_pat (big_endian b)]
 let rec lemma_big_endian_is_bounded b =
   if Seq.length b = 0 then ()
   else
@@ -155,7 +155,7 @@ let rec lemma_big_endian_is_bounded b =
 val lemma_little_endian_lt_2_128: b:bytes {Seq.length b <= 16} -> Lemma
   (requires True)
   (ensures  (little_endian b < pow2 128))
-  [SMTPat (little_endian b)]
+  [smt_pat (little_endian b)]
 let lemma_little_endian_lt_2_128 b =
   lemma_little_endian_is_bounded b;
   if Seq.length b = 16 then ()

@@ -19,7 +19,7 @@ val list_subterm_ordering_lemma:
   -> x:'a
   -> Lemma (requires (l << bound))
           (ensures (mem x l ==> x << bound))
-          [SMTPat (mem x l); SMTPatT (x << bound)]
+          [smt_pat (mem x l); smt_pat (x << bound)]
 
 let rec list_subterm_ordering_lemma l bound x = match l with
   | [] -> ()
@@ -41,7 +41,7 @@ val lemma_move_refinement_length:
   -> l:list a{forall z. mem z l ==> p z}
   -> Lemma (requires (True))
           (ensures ((length l) = (length (move_refinement #a #p l))))
-          [SMTPat (move_refinement #a #p l)]
+          [smt_pat (move_refinement #a #p l)]
 
 let rec lemma_move_refinement_length (#a:Type) (#p:(a -> Type)) l =
   match l with

@@ -86,7 +86,7 @@ let lemma_upd_1 #a (h:mem) (x:stackref a) (v:a) : Lemma
 	    /\ modifies_one (frameOf x) h (upd h x v)
 	    /\ modifies_ref (frameOf x) (Set.singleton (as_aref x)) h (upd h x v)
 	    /\ sel (upd h x v) x = v ))
-  [SMTPat (upd h x v); SMTPatT (contains h x)]
+  [smt_pat (upd h x v); smt_pat (contains h x)]
   = ()
 
 let lemma_upd_2 #a (h:mem) (x:stackref a) (v:a) : Lemma
@@ -96,13 +96,13 @@ let lemma_upd_2 #a (h:mem) (x:stackref a) (v:a) : Lemma
 	    /\ modifies_one h.tip h (upd h x v)
 	    /\ modifies_ref h.tip Set.empty h (upd h x v)
 	    /\ sel (upd h x v) x = v ))
-  [SMTPat (upd h x v); SMTPatT (~(contains h x))]
+  [smt_pat (upd h x v); smt_pat (~(contains h x))]
   = ()
 
 assume val lemma_live_1: #a:Type ->  #a':Type -> h:mem -> x:stackref a -> x':stackref a' -> Lemma
   (requires (contains h x /\ ~(contains h x')))
   (ensures  (Heap.Ref (as_ref x) <> Heap.Ref (as_ref x')))
-  [SMTPat (contains h x); SMTPatT (~(contains h x'))]
+  [smt_pat (contains h x); smt_pat (~(contains h x'))]
 
 (* (\* //l0 `suffix_of` l1 is strict; i.e., l0 <> l1; RENAMED: used to be includes *\) *)
 (* (\* //TODO: change this to be non-strict *\) *)
@@ -139,7 +139,7 @@ assume val lemma_live_1: #a:Type ->  #a':Type -> h:mem -> x:stackref a -> x':sta
 (* (\* val lemma_as_ref_inj: #a:Type -> #i:rid -> r:rref i a *\) *)
 (* (\*     -> Lemma (requires (True)) *\) *)
 (* (\*              (ensures ((ref_as_rref i (as_ref r) = r))) *\) *)
-(* (\*        [SMTPat (as_ref r)] *\) *)
+(* (\*        [smt_pat (as_ref r)] *\) *)
 (* (\* let lemma_as_ref_inj #a #i r = () *\) *)
 
 (* (\* (\\* Returns the stack of region ids *\\) *\) *)
@@ -248,13 +248,13 @@ assume val lemma_live_1: #a:Type ->  #a':Type -> h:mem -> x:stackref a -> x':sta
 (* (\*   (requires (contains s0 x /\ modifies_ref r s s0 s1 /\ modifies_one r s0 s1 /\  *\) *)
 (* (\* 		      (frameOf x <> r \/ (frameOf x = r /\ not(Set.mem (Ref (as_ref x)) s))))) *\) *)
 (* (\*   (ensures (sel s1 x = sel s0 x)) *\) *)
-(* (\*   [SMTPat (modifies_ref r s s0 s1); SMTPat (~(Set.mem (Ref (as_ref x)) s))] *\) *)
+(* (\*   [smt_pat (modifies_ref r s s0 s1); smt_pat (~(Set.mem (Ref (as_ref x)) s))] *\) *)
 (* (\* let lemma_modifies_ref_1 #a r s s0 s1 x = () *\) *)
 
 (* (\* val lemma_modifies_ref_2: #a:Type -> y:stacked a -> s0:t -> s1:t -> x:stacked a -> Lemma *\) *)
 (* (\*   (requires (contains s0 x /\ modifies_ref (frameOf y) !{as_ref y} s0 s1 /\ modifies_one (frameOf y) s0 s1 /\ (frameOf x <> frameOf y \/ (frameOf x = frameOf y /\ y <> x)))) *\) *)
 (* (\*   (ensures (sel s1 x = sel s0 x)) *\) *)
-(* (\*   [SMTPat (modifies_ref (frameOf y) !{as_ref y} s0 s1); SMTPatT (x <> y)] *\) *)
+(* (\*   [smt_pat (modifies_ref (frameOf y) !{as_ref y} s0 s1); smt_pat (x <> y)] *\) *)
 (* (\* let lemma_modifies_ref_2 #a y s0 s1 x = () *\) *)
 
 (* (\* open FStar.Set *\) *)
@@ -270,19 +270,19 @@ assume val lemma_live_1: #a:Type ->  #a':Type -> h:mem -> x:stackref a -> x':sta
 (* (\* let stacked_to_ref_lemma_1 (#a:Type) (x:stacked a) (y:stacked a) *\) *)
 (* (\*   : Lemma (requires (x <> y /\ x.id=y.id)) *\) *)
 (* (\* 	  (ensures (asRef x <> asRef y)) *\) *)
-(* (\* 	  [SMTPat (x <> y)] *\) *)
+(* (\* 	  [smt_pat (x <> y)] *\) *)
 (* (\*   = () *\) *)
 
 (* (\* let stacked_to_ref_lemma_2 (#a:Type) (x:stacked a) (y:stacked a) *\) *)
 (* (\*   : Lemma (requires (x <> y /\ x.id=y.id)) *\) *)
 (* (\* 	  (ensures (as_ref x <> as_ref y)) *\) *)
-(* (\* 	  [SMTPat (x <> y)] *\) *)
+(* (\* 	  [smt_pat (x <> y)] *\) *)
 (* (\*   = () *\) *)
 
 (* (\* let stack_to_ref_lemma_3 (#a:Type) (#a':Type) (x:stacked a) (y:stacked a') *\) *)
 (* (\*   : Lemma (requires (a <> a')) *\) *)
 (* (\* 	  (ensures (as_ref x =!= as_ref y)) *\) *)
-(* (\* 	  [SMTPat (a <> a')] *\) *)
+(* (\* 	  [smt_pat (a <> a')] *\) *)
 (* (\*   = () *\) *)
 
 (* (\* (\\* Union of the domains of all the frames on the stack *\\) *\) *)
@@ -295,29 +295,29 @@ assume val lemma_live_1: #a:Type ->  #a':Type -> h:mem -> x:stackref a -> x':sta
 (* (\* assume val domain_equality_lemma_0: h0:t -> Lemma *\) *)
 (* (\*   (requires (True)) *\) *)
 (* (\*   (ensures (domain_equality h0 (pop_top_frame (push_empty_frame h0)))) *\) *)
-(* (\*   [SMTPat (pop_top_frame (push_empty_frame h0))]  *\) *)
+(* (\*   [smt_pat (pop_top_frame (push_empty_frame h0))]  *\) *)
 
 (* (\* val domain_equality_lemma_1: h0:t -> h1:t -> h2:t -> h3:t -> Lemma *\) *)
 (* (\*   (requires (h1 = push_empty_frame h0 /\ frame_ids h2 = frame_ids h1 *\) *)
 (* (\* 	     /\ domain_equality (pop_top_frame h1) (pop_top_frame h2) *\) *)
 (* (\* 	     /\ h3 = pop_top_frame h2)) *\) *)
 (* (\*   (ensures (domain_equality h0 h3)) *\) *)
-(* (\*   [SMTPat (h1 = push_empty_frame h0); SMTPat (frame_ids h2 = frame_ids h1); *\) *)
-(* (\*    SMTPatT (domain_equality (pop_top_frame h1) (pop_top_frame h2)); SMTPat (h3 = pop_top_frame h2)] *\) *)
+(* (\*   [smt_pat (h1 = push_empty_frame h0); smt_pat (frame_ids h2 = frame_ids h1); *\) *)
+(* (\*    smt_pat (domain_equality (pop_top_frame h1) (pop_top_frame h2)); smt_pat (h3 = pop_top_frame h2)] *\) *)
 (* (\* let domain_equality_lemma_1 h0 h1 h2 h3 = () *\) *)
 
 (* (\* assume val domain_equality_lemma_2: h0:t{poppable h0} -> h1:t{frame_ids h0 = frame_ids h1} -> Lemma *\) *)
 (* (\*   (requires (modifies_one (top_frame_id h0) h0 h1)) *\) *)
 (* (\*   (ensures (domain_equality (pop_top_frame h0) (pop_top_frame h1))) *\) *)
-(* (\*   [SMTPat (modifies_one (top_frame_id h0) h0 h1)] *\) *)
+(* (\*   [smt_pat (modifies_one (top_frame_id h0) h0 h1)] *\) *)
 
 (* (\* assume val domain_equality_lemma_3: h0:t -> h1:t -> Lemma *\) *)
 (* (\*   (requires (domain_equality h0 h1)) *\) *)
 (* (\*   (ensures (modifies_one (top_frame_id h0) h0 h1)) *\) *)
-(* (\*   [SMTPat (modifies_one (top_frame_id h0) h0 h1)] *\) *)
+(* (\*   [smt_pat (modifies_one (top_frame_id h0) h0 h1)] *\) *)
 
 (* (\* assume val domain_equality_lemma_4: h:t -> h':t -> r:rid -> s:Set.set Heap.aref -> Lemma *\) *)
 (* (\*   (requires (modifies (Set.singleton r) h h' /\ frame_ids h = frame_ids h'  *\) *)
 (* (\* 	    /\ modifies_ref r s h h' /\ modifies_ref r s h' h)) *\) *)
 (* (\*   (ensures (domain_equality h h')) *\) *)
-(* (\*   [SMTPat (modifies_ref r s h h')] *\) *)
+(* (\*   [smt_pat (modifies_ref r s h h')] *\) *)

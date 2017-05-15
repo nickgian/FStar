@@ -24,7 +24,7 @@ val pow2_values: x:nat -> Lemma
    | 63 -> p=9223372036854775808
    | 64 -> p=18446744073709551616
    | _  -> True))
-  [SMTPat (pow2 x)]
+  [smt_pat (pow2 x)]
 let pow2_values x =
    match x with
    | 0  -> assert_norm (pow2 0 == 1)

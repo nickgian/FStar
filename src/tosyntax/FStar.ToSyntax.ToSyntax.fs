@@ -1196,8 +1196,8 @@ and desugar_comp r env t =
         Ident.lid_equals cons C.cons_lid &&
         BU.for_some (fun s -> smtpat.str = s)
           (* the smt pattern does not seem to be disambiguated yet at this point *)
-          ["SMTPat" ; "SMTPatT" ; "SMTPatOr"]
-          (* [C.smtpat_lid ; C.smtpatT_lid ; C.smtpatOr_lid] *)
+          ["SMTPat" ; "SMTPatOr"]
+          (* [C.smtpat_lid ; C.smtpatOr_lid] *)
       | _ -> false
     in
     let is_decreases = is_app "decreases" in
@@ -1315,11 +1315,11 @@ and desugar_comp r env t =
           match rest with
           | [req;ens;(pat, aq)] ->
             let pat = match pat.n with
-              (* we really want the empty pattern to be in universe S 0 rather than generalizing it *)
+              (* we really want the empty pattern to be in universe 0 rather than generalizing it *)
               | Tm_fvar fv when S.fv_eq_lid fv Const.nil_lid ->
-                let nil = S.mk_Tm_uinst pat [U_succ U_zero] in
+                let nil = S.mk_Tm_uinst pat [U_zero] in
                 let pattern =
-                  S.mk_Tm_uinst (S.fvar (Ident.set_lid_range Const.pattern_lid pat.pos) Delta_constant None) [U_zero]
+                  S.fvar (Ident.set_lid_range Const.pattern_lid pat.pos) Delta_constant None
                 in
                 S.mk_Tm_app nil [(pattern, Some S.imp_tag)] None pat.pos
               | _ -> pat

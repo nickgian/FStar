@@ -14,7 +14,7 @@ val contains_lemma : #a:Type ->
 	             r:ref a ->
 	             Lemma (requires (contains r h)) 
 			   (ensures  (NatHeap.contains h r))
-	             [SMTPat (contains r h)]
+	             [smt_pat (contains r h)]
 let contains_lemma #a h r = ()
 
 

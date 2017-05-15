@@ -50,22 +50,22 @@ inline_for_extraction val safeId: i:id -> Tot bool
 inline_for_extraction val mac1_implies_mac_log: i:id -> Lemma
   (requires (mac1 i))
   (ensures mac_log)
-  [SMTPat (mac1 i)]
+  [smt_pat (mac1 i)]
 
 inline_for_extraction val mac1_implies_prf: i:id -> Lemma
   (requires (mac1 i))
   (ensures (prf i))
-  [SMTPat (mac1 i)]
+  [smt_pat (mac1 i)]
 
 inline_for_extraction val safeId_implies_mac1: i:id -> Lemma
   (requires (safeId i))
   (ensures (mac1 i))
-  [SMTPat (safeId i)]
+  [smt_pat (safeId i)]
 
 inline_for_extraction val safeId_implies_cpa: i:id -> Lemma
   (requires (safeId i))
   (ensures (prf_cpa))
-  [SMTPat (safeId i)]
+  [smt_pat (safeId i)]
 
 
 inline_for_extraction val aes_ct : bool

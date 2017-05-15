@@ -37,7 +37,7 @@ val sorted_smaller: x:trie
                 ->  l:list trie
                 ->  Lemma (requires (sorted (x::l) /\ mem y l))
                           (ensures (leq_trie x y))
-                          [SMTPat (sorted (x::l)); SMTPat (mem y l)]
+                          [smt_pat (sorted (x::l)); smt_pat (mem y l)]
 let rec sorted_smaller x y l = match l with
     | [] -> ()
     | z::zs -> if z=y then () else sorted_smaller x y zs

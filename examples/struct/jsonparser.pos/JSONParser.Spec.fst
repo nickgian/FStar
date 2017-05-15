@@ -70,7 +70,7 @@ let as_gtype_object_eq
   (ensures 
    (as_gtype (Object l) ==
     DependentMap.t (s: key {List.Tot.mem s (List.Tot.map fst l) }) (object_as_type (Object l) as_gtype l)))
-  [SMTPat (as_gtype (Object l))]
+  [smt_pat (as_gtype (Object l))]
 = assert_norm (as_gtype (Object l) ==
     DependentMap.t (s: key {List.Tot.mem s (List.Tot.map fst l) }) (object_as_type (Object l) as_gtype l))
 
@@ -162,7 +162,7 @@ let gprint_object_eq
       (Seq.snoc
 	(gprint_object (Object l) gprint l data l)
 	right_brace)))
-  [SMTPat (gprint (Object l) data)]
+  [smt_pat (gprint (Object l) data)]
 = assert_norm (gprint (Object l) data ==
     Seq.cons
       left_brace
@@ -642,7 +642,7 @@ let gparse_object_eq
 	end
       end
   )))
-  [SMTPat (gparse (Object l) data s)]
+  [smt_pat (gparse (Object l) data s)]
 = assert_norm (gparse (Object l) data s ==
     (match gparse_exact_char left_brace s with
     | None -> None
@@ -666,7 +666,7 @@ let length_gprint
 : Lemma
   (requires True)
   (ensures (Seq.length (gprint j data) > 0))
-  [SMTPat (Seq.length (gprint j data))]
+  [smt_pat (Seq.length (gprint j data))]
 = ()
 
 let gparse_object_gprint_object_aux_nil

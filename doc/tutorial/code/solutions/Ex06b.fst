@@ -18,7 +18,7 @@ val append_mem: #t:eqtype
               -> l2:list t
               -> Lemma (requires True)
                        (ensures (forall a. mem a (append l1 l2) = (mem a l1 || mem a l2)))
-                       [SMTPat (append l1 l2)]
+                       [smt_pat (append l1 l2)]
 let rec append_mem #t l1 l2 = match l1 with
   | [] -> ()
   | hd::tl -> append_mem tl l2
@@ -57,7 +57,7 @@ val partition_lemma: #t:eqtype -> f:(t -> Tot bool)
                   /\ (forall x. mem x (snd (partition f l)) ==> not (f x))
                   /\ (forall x. mem x l = (mem x (fst (partition f l))
                                         || mem x (snd (partition f l)))))))
-            [SMTPat (partition f l)]
+            [smt_pat (partition f l)]
 let rec partition_lemma #t f l = match l with
     | [] -> ()
     | hd::tl -> partition_lemma f tl
@@ -79,7 +79,7 @@ val sorted_concat_lemma: #t:eqtype
                                        /\ (forall y. mem y l1 ==> not (f pivot y))
                                        /\ (forall y. mem y l2 ==> f pivot y)))
                                (ensures (sorted f (append l1 (pivot::l2))))
-                               [SMTPat (sorted f (append l1 (pivot::l2)))]
+                               [smt_pat (sorted f (append l1 (pivot::l2)))]
 let rec sorted_concat_lemma #t f l1 l2 pivot = match l1 with
     | [] -> ()
     | hd::tl -> sorted_concat_lemma f tl l2 pivot

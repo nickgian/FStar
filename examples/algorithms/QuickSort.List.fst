@@ -28,7 +28,7 @@ val mem_count: #a:eqtype -> x:a -> l:list a ->
   Lemma (requires True)
 	(ensures (mem x l = (count x l > 0)))
 	(decreases l)
-  [SMTPat (mem x l)]
+  [smt_pat (mem x l)]
 let rec mem_count #a x = function
   | [] -> ()
   | _::tl -> mem_count x tl
@@ -37,7 +37,7 @@ let rec mem_count #a x = function
 val append_count: #a:eqtype -> l:list a -> m:list a -> x:a ->
   Lemma (requires True)
         (ensures (count x (l @ m) = (count x l + count x m)))
-  [SMTPat (count x (l @ m))]
+  [smt_pat (count x (l @ m))]
 let rec append_count #a l m x =
   match l with
   | [] -> ()
@@ -59,7 +59,7 @@ val partition_lemma: #a:eqtype -> f:(a -> Tot bool) -> l:list a ->
                   /\ (forall x. (mem x hi ==>   f x)
                         /\ (mem x lo ==> ~(f x))
                         /\ (count x l = count x hi + count x lo))))
-  [SMTPat (partition f l)]
+  [smt_pat (partition f l)]
 let rec partition_lemma #a f l = match l with
   | [] -> ()
   | hd::tl ->  partition_lemma f tl
@@ -70,7 +70,7 @@ val sorted_app_lemma: #a:eqtype -> f:total_order a
   -> Lemma (requires (forall y. (mem y l1 ==> ~(f pivot y))
 		        /\ (mem y l2 ==>   f pivot y)))
           (ensures (sorted f (l1 @ pivot :: l2)))
-  [SMTPat (sorted f (l1 @ pivot::l2))]
+  [smt_pat (sorted f (l1 @ pivot::l2))]
 let rec sorted_app_lemma #a f l1 l2 pivot =
   match l1 with
   | hd::tl -> sorted_app_lemma f tl l2 pivot

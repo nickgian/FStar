@@ -148,7 +148,7 @@ val writeRegionStackWellFormed : #a:Type -> r:(lref a)
   -> Lemma
       (requires (wellFormed (ms)))
       (ensures (wellFormed (writeInRegionStack r ms s v)))
-      [SMTPat (writeInRegionStack r ms s v)]
+      [smt_pat (writeInRegionStack r ms s v)]
 let writeRegionStackWellFormed r ms s v = updateRegionWellFormed (writeInRegion r v) s ms
 
 
@@ -185,7 +185,7 @@ let memIdUniq h tl = ()
 val refIsLiveInStackTail : #a:Type -> r:lref a
   -> id:rid -> ms:wfRegionStack  -> Lemma (requires (refIsLiveInStack r id (Stack.tail ms)))
           (ensures  (refIsLiveInStack r id ms))
-          [SMTPat (refIsLiveInStack r id (Stack.tail ms))]
+          [smt_pat (refIsLiveInStack r id (Stack.tail ms))]
 let refIsLiveInStackTail r id ms = refIsLiveInStackId r id (Stack.tail ms)
 
 
@@ -204,7 +204,7 @@ val writeInStackPreservesLiveness : #a:Type -> #b:Type -> rw:lref a -> r:lref b
   -> Lemma
       (requires (refIsLiveInStack r id ms))
       (ensures (refIsLiveInStack r id (writeInRegionStack rw ms idw v)))
-      [SMTPat (refIsLiveInStack r id (writeInRegionStack rw ms idw v))]
+      [smt_pat (refIsLiveInStack r id (writeInRegionStack rw ms idw v))]
 let rec writeInStackPreservesLiveness rw r ms idw id v =
   match ms with
   | Nil -> ()
@@ -227,7 +227,7 @@ val writeMemAuxPreservesLiveness :  #a:Type -> #b:Type ->
   rw:lref a -> r:lref b -> m:smem -> v:a ->
 Lemma (requires (refIsLive r m))
       (ensures (refIsLive r (writeMemAux rw m v)))
-      [SMTPat (refIsLive r (writeMemAux rw m v))]
+      [smt_pat (refIsLive r (writeMemAux rw m v))]
 let writeMemAuxPreservesLiveness rw r m v =
   match regionOf r with
   | InHeap -> ()
@@ -239,7 +239,7 @@ let writeMemAuxPreservesLiveness rw r m v =
  
 val writeMemAuxPreservesRegionIds :  #a:Type -> rw:lref a  -> m:smem -> v:a ->
 Lemma (requires (True)) (ensures (rids m = rids (writeMemAux rw m v)))
- [SMTPat (writeMemAux rw m v)]
+ [smt_pat (writeMemAux rw m v)]
 
 let writeMemAuxPreservesRegionIds rw m v =
 match (regionOf rw) with
@@ -316,13 +316,13 @@ let readAfterWrite rw r v m =
   | _ -> ()
 
 (* AA: Again, F* does not seem to unfold ifthenelseT in the above. So, it seems
-   necessary to provide the 2 specializations below as an SMTPat, instead of
+   necessary to provide the 2 specializations below as an smt_pat, instead of
    just the above lemma *)
 val readAfterWriteTrue : #a:Type -> #b:Type ->  rw:lref a -> r:lref b -> v:a -> m:smem ->
   Lemma (requires (refIsLive r m /\ r==rw))
         (ensures (refIsLive r m) /\
             (lookupRef r (writeMemAux rw m v) == v))
-        [SMTPat (lookupRef r (writeMemAux rw m v))]
+        [smt_pat (lookupRef r (writeMemAux rw m v))]
 let readAfterWriteTrue rw r v m = readAfterWrite rw r v m
 
 
@@ -330,7 +330,7 @@ val readAfterWriteFalse : #a:Type -> #b:Type ->  rw:lref a -> r:lref b -> v:a ->
   Lemma (requires (refIsLive r m /\ r=!=rw))
         (ensures (refIsLive r m) /\
         (lookupRef r (writeMemAux rw m v) = (lookupRef r m)))
-        [SMTPat (lookupRef r (writeMemAux rw m v))]
+        [smt_pat (lookupRef r (writeMemAux rw m v))]
 let readAfterWriteFalse rw r v m = readAfterWrite rw r v m
 
 
@@ -345,7 +345,7 @@ let readAfterWriteSameType rw r v m = readAfterWrite rw r v m
 val refIsLiveTail : #a:Type -> r:lref a -> m:smem ->
   Lemma (requires (refIsLive r (tail m)))
         (ensures (refIsLive r (m)))
-        [SMTPat (refIsLive r (tail m))]
+        [smt_pat (refIsLive r (tail m))]
 let refIsLiveTail r m =
 match regionOf r with
 | InHeap -> ()
@@ -367,7 +367,7 @@ val readTailRef : #a:Type -> r:(lref a) -> m:smem ->
   Lemma (requires (refIsLive r (tail m)))
         (ensures (refIsLive r (tail m))
             /\ lookupRef r m =  lookupRef r (tail m))
-            [SMTPat (refIsLive r (tail m))]
+            [smt_pat (refIsLive r (tail m))]
 let readTailRef r m =
 match regionOf r with
 | InHeap -> ()
@@ -389,7 +389,7 @@ val writeTailRef : #a:Type -> r:lref a -> m:smem -> v:a ->
   Lemma (requires (refIsLive r (tail m)))
         (ensures (refIsLive r (tail m))
             /\ tail (writeMemAux r m v) =  writeMemAux r (tail m) v)
-            [SMTPat (tail (writeMemAux r m v))]
+            [smt_pat (tail (writeMemAux r m v))]
 let writeTailRef r m v =
 match (regionOf r) with
 | InHeap -> ()
@@ -489,7 +489,7 @@ let locIsLive v m =
 //   -> Lemma
 //       (requires (wellFormed (ms)))
 //       (ensures (wellFormed (freeInRegionStack r ms s)))
-//       [SMTPat (freeInRegionStack r ms s)]
+//       [smt_pat (freeInRegionStack r ms s)]
 // let freeInRegionStackWellFormed r ms s = (updateRegionWellFormed (freeRefInBlock r) s ms)*)
 
 
@@ -497,7 +497,7 @@ let locIsLive v m =
 // val writeRegionStackSameStail : #a:Type -> r:(lref a) -> ms:(regionStack)
 //   -> s:rid -> v:a
 //   -> Lemma (ensures ((stail ms) = (stail (writeInRegionStack r ms s v))))
-//          (*  [SMTPat (writeRegionStack r ms s v)] *)
+//          (*  [smt_pat (writeRegionStack r ms s v)] *)
 // let rec writeRegionStackSameStail r ms s v = ()
 // *)
 

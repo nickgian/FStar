@@ -57,7 +57,7 @@ let snoc (s:seq 'a) (x:'a)
 let lemma_snoc_extends (s:seq 'a) (x:'a)
   : Lemma (requires True)
 	  (ensures (grows s (Seq.snoc s x)))
-	  [SMTPat (grows s (Seq.snoc s x))]
+	  [smt_pat (grows s (Seq.snoc s x))]
   = ()
 
 let alloc_mref_seq (#a:Type) (r:rid) (init:seq a)
@@ -245,7 +245,7 @@ val map_length: f:('a -> Tot 'b) -> s1:seq 'a -> Lemma
   (requires True)
   (ensures (Seq.length s1 = Seq.length (map f s1)))
   (decreases (length s1))
-  [SMTPat (Seq.length (map f s1))]
+  [smt_pat (Seq.length (map f s1))]
 let rec map_length f s1 =
   if Seq.length s1 = 0 then ()
   else let prefix, last = un_snoc s1 in
@@ -255,7 +255,7 @@ val map_index: f:('a -> Tot 'b) -> s:seq 'a -> i:nat{i<Seq.length s} -> Lemma
   (requires True)
   (ensures (Seq.index (map f s) i == f (Seq.index s i)))
   (decreases (Seq.length s))
-  [SMTPat (Seq.index (map f s) i)]
+  [smt_pat (Seq.index (map f s) i)]
 let rec map_index f s i =
   if i = Seq.length s - 1
   then ()

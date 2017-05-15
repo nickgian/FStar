@@ -57,7 +57,7 @@ let rec compile (e : exp) : Tot prog =
     | Binop b e1 e2 -> compile e2 @ compile e1 @ [IBinop b]
 
 let rec app_assoc_reverse (#a:Type) (l : list a) (m : list a) (n : list a) :
-    Lemma (requires True) (ensures ((l @ m) @ n == l @ m @ n)) [SMTPat ((l @ m) @ n)] =
+    Lemma (requires True) (ensures ((l @ m) @ n == l @ m @ n)) [smt_pat ((l @ m) @ n)] =
   match l with
   | [] -> ()
   | _::l' -> app_assoc_reverse l' m n
@@ -72,7 +72,7 @@ let rec compile_correct' e p s :
           without an interactive mode seems tricky; I just copied them from Adam *)
 
 let rec app_nil_end (#a : Type) (l : list a) :
-    Lemma (requires True) (ensures (l == l @ [])) (decreases l) [SMTPat (l @ [])] =
+    Lemma (requires True) (ensures (l == l @ [])) (decreases l) [smt_pat (l @ [])] =
   match l with
   | [] -> ()
   | _::l' -> app_nil_end l'
@@ -189,7 +189,7 @@ let rec tconcat_correct #ts #ts' #ts''
                        (p : tprog ts ts') (p' : tprog ts' ts'') (s : vstack ts) :
     Lemma (requires True)
           (ensures (tprogDenote (tconcat p p') s == tprogDenote p' (tprogDenote p s)))
-          (decreases p) [SMTPat (tprogDenote (tconcat p p') s)] =
+          (decreases p) [smt_pat (tprogDenote (tconcat p p') s)] =
   match p with
   | TNil -> ()
   | TCons t pp -> tconcat_correct pp p' (tinstrDenote t s)
