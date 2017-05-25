@@ -38,10 +38,10 @@ let tc_one_file (remaining:list<string>) (uenv:uenv) = //:((string option * stri
   let (intf, impl), dsenv, env, remaining =
     match remaining with
     | intf :: impl :: remaining when needs_interleaving intf impl ->
-      let _, dsenv, env = tc_one_file_and_intf (Some intf) impl dsenv env in
+      let _, dsenv, env = tc_one_file dsenv env (Some intf) impl in
       (Some intf, impl), dsenv, env, remaining
     | intf_or_impl :: remaining ->
-      let _, dsenv, env = tc_one_file_and_intf None intf_or_impl dsenv env in
+      let _, dsenv, env = tc_one_file dsenv env None intf_or_impl in
       (None, intf_or_impl), dsenv, env, remaining
     | [] -> failwith "Impossible"
   in
@@ -434,14 +434,14 @@ let json_of_issue_level i =
 let json_of_issue issue =
   JsonAssoc [("level", json_of_issue_level issue.issue_level);
              ("message", JsonStr issue.issue_message);
-             ("ranges", JsonList (match issue.issue_range with
-                                  | None -> []
-                                  | Some r -> [json_of_use_range r]));
-             ("related_ranges", JsonList (match issue.issue_range with
-                                          | Some r
-                                             when r.def_range <> r.use_range ->
-                                            [json_of_def_range r]
-                                          | _ -> []))]
+             ("ranges", JsonList
+                          ((match issue.issue_range with
+                            | None -> []
+                            | Some r -> [json_of_use_range r]) @
+                           (match issue.issue_range with
+                            | Some r when r.def_range <> r.use_range ->
+                              [json_of_def_range r]
+                            | _ -> [])))]
 
 type lookup_result = { lr_name: string;
                        lr_def_range: option<Range.range>;

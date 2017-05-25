@@ -3,11 +3,14 @@ let mk:
   FStar_Syntax_Syntax.term' ->
     (FStar_Syntax_Syntax.term',FStar_Syntax_Syntax.term')
       FStar_Syntax_Syntax.syntax
-  = fun t  -> (FStar_Syntax_Syntax.mk t) None FStar_Range.dummyRange
+  = fun t  -> FStar_Syntax_Syntax.mk t None FStar_Range.dummyRange
 let p2l: Prims.string Prims.list -> FStar_Ident.lident =
   fun l  -> FStar_Ident.lid_of_path l FStar_Range.dummyRange
 let pconst: Prims.string -> FStar_Ident.lident = fun s  -> p2l ["Prims"; s]
+let psconst: Prims.string -> FStar_Ident.lident =
+  fun s  -> p2l ["FStar"; "Pervasives"; s]
 let prims_lid: FStar_Ident.lident = p2l ["Prims"]
+let pervasives_lid: FStar_Ident.lident = p2l ["FStar"; "Pervasives"]
 let fstar_ns_lid: FStar_Ident.lident = p2l ["FStar"]
 let bool_lid: FStar_Ident.lident = pconst "bool"
 let unit_lid: FStar_Ident.lident = pconst "unit"
@@ -17,8 +20,8 @@ let bytes_lid: FStar_Ident.lident = pconst "bytes"
 let int_lid: FStar_Ident.lident = pconst "int"
 let exn_lid: FStar_Ident.lident = pconst "exn"
 let list_lid: FStar_Ident.lident = pconst "list"
-let option_lid: FStar_Ident.lident = pconst "option"
-let either_lid: FStar_Ident.lident = pconst "either"
+let option_lid: FStar_Ident.lident = psconst "option"
+let either_lid: FStar_Ident.lident = psconst "either"
 let pattern_lid: FStar_Ident.lident = pconst "pattern"
 let precedes_lid: FStar_Ident.lident = pconst "precedes"
 let lex_t_lid: FStar_Ident.lident = pconst "lex_t"
@@ -49,14 +52,14 @@ let kunary:
   =
   fun k  ->
     fun k'  ->
-      let uu____26 =
-        let uu____27 =
-          let uu____35 =
-            let uu____37 = FStar_Syntax_Syntax.null_binder k in [uu____37] in
-          let uu____38 = FStar_Syntax_Syntax.mk_Total k' in
-          (uu____35, uu____38) in
-        FStar_Syntax_Syntax.Tm_arrow uu____27 in
-      mk uu____26
+      let uu____25 =
+        let uu____26 =
+          let uu____34 =
+            let uu____36 = FStar_Syntax_Syntax.null_binder k in [uu____36] in
+          let uu____37 = FStar_Syntax_Syntax.mk_Total k' in
+          (uu____34, uu____37) in
+        FStar_Syntax_Syntax.Tm_arrow uu____26 in
+      mk uu____25
 let kbin:
   FStar_Syntax_Syntax.term ->
     FStar_Syntax_Syntax.term ->
@@ -65,18 +68,18 @@ let kbin:
   fun k1  ->
     fun k2  ->
       fun k'  ->
-        let uu____49 =
-          let uu____50 =
-            let uu____58 =
-              let uu____60 = FStar_Syntax_Syntax.null_binder k1 in
-              let uu____61 =
-                let uu____63 = FStar_Syntax_Syntax.null_binder k2 in
-                [uu____63] in
-              uu____60 :: uu____61 in
-            let uu____64 = FStar_Syntax_Syntax.mk_Total k' in
-            (uu____58, uu____64) in
-          FStar_Syntax_Syntax.Tm_arrow uu____50 in
-        mk uu____49
+        let uu____48 =
+          let uu____49 =
+            let uu____57 =
+              let uu____59 = FStar_Syntax_Syntax.null_binder k1 in
+              let uu____60 =
+                let uu____62 = FStar_Syntax_Syntax.null_binder k2 in
+                [uu____62] in
+              uu____59 :: uu____60 in
+            let uu____63 = FStar_Syntax_Syntax.mk_Total k' in
+            (uu____57, uu____63) in
+          FStar_Syntax_Syntax.Tm_arrow uu____49 in
+        mk uu____48
 let ktern:
   FStar_Syntax_Syntax.term ->
     FStar_Syntax_Syntax.term ->
@@ -87,21 +90,21 @@ let ktern:
     fun k2  ->
       fun k3  ->
         fun k'  ->
-          let uu____78 =
-            let uu____79 =
-              let uu____87 =
-                let uu____89 = FStar_Syntax_Syntax.null_binder k1 in
-                let uu____90 =
-                  let uu____92 = FStar_Syntax_Syntax.null_binder k2 in
-                  let uu____93 =
-                    let uu____95 = FStar_Syntax_Syntax.null_binder k3 in
-                    [uu____95] in
-                  uu____92 :: uu____93 in
-                uu____89 :: uu____90 in
-              let uu____96 = FStar_Syntax_Syntax.mk_Total k' in
-              (uu____87, uu____96) in
-            FStar_Syntax_Syntax.Tm_arrow uu____79 in
-          mk uu____78
+          let uu____77 =
+            let uu____78 =
+              let uu____86 =
+                let uu____88 = FStar_Syntax_Syntax.null_binder k1 in
+                let uu____89 =
+                  let uu____91 = FStar_Syntax_Syntax.null_binder k2 in
+                  let uu____92 =
+                    let uu____94 = FStar_Syntax_Syntax.null_binder k3 in
+                    [uu____94] in
+                  uu____91 :: uu____92 in
+                uu____88 :: uu____89 in
+              let uu____95 = FStar_Syntax_Syntax.mk_Total k' in
+              (uu____86, uu____95) in
+            FStar_Syntax_Syntax.Tm_arrow uu____78 in
+          mk uu____77
 let true_lid: FStar_Ident.lident = pconst "l_True"
 let false_lid: FStar_Ident.lident = pconst "l_False"
 let and_lid: FStar_Ident.lident = pconst "l_and"
@@ -136,8 +139,8 @@ let exp_string: Prims.string -> FStar_Syntax_Syntax.term =
             ((FStar_Util.unicode_of_string s), FStar_Range.dummyRange)))
 let cons_lid: FStar_Ident.lident = pconst "Cons"
 let nil_lid: FStar_Ident.lident = pconst "Nil"
-let some_lid: FStar_Ident.lident = pconst "Some"
-let none_lid: FStar_Ident.lident = pconst "None"
+let some_lid: FStar_Ident.lident = psconst "Some"
+let none_lid: FStar_Ident.lident = psconst "None"
 let assume_lid: FStar_Ident.lident = pconst "_assume"
 let assert_lid: FStar_Ident.lident = pconst "_assert"
 let list_append_lid: FStar_Ident.lident = p2l ["FStar"; "List"; "append"]
