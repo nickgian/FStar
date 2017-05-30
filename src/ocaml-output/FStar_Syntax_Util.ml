@@ -1438,8 +1438,12 @@ let fvar_const: FStar_Ident.lident -> FStar_Syntax_Syntax.term =
     FStar_Syntax_Syntax.fvar l FStar_Syntax_Syntax.Delta_constant None
 let tand: FStar_Syntax_Syntax.term = fvar_const FStar_Syntax_Const.and_lid
 let tor: FStar_Syntax_Syntax.term = fvar_const FStar_Syntax_Const.or_lid
-let timp: FStar_Syntax_Syntax.term = fvar_const FStar_Syntax_Const.imp_lid
-let tiff: FStar_Syntax_Syntax.term = fvar_const FStar_Syntax_Const.iff_lid
+let timp: FStar_Syntax_Syntax.term =
+  FStar_Syntax_Syntax.fvar FStar_Syntax_Const.imp_lid
+    (FStar_Syntax_Syntax.Delta_defined_at_level (Prims.parse_int "1")) None
+let tiff: FStar_Syntax_Syntax.term =
+  FStar_Syntax_Syntax.fvar FStar_Syntax_Const.iff_lid
+    (FStar_Syntax_Syntax.Delta_defined_at_level (Prims.parse_int "2")) None
 let t_bool: FStar_Syntax_Syntax.term = fvar_const FStar_Syntax_Const.bool_lid
 let t_false: FStar_Syntax_Syntax.term =
   fvar_const FStar_Syntax_Const.false_lid
